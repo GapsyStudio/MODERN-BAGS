@@ -89,7 +89,7 @@
   .gapsy-collection__cats::-webkit-scrollbar { display: none; }
   .gapsy-collection__cat { flex: none; font-size: 1.25rem; min-height: 2.5rem; }
   .gapsy-collection__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 0.75rem; }
-  .gapsy-collection { --card-h: 48vw; }
+  .gapsy-collection .gapsy-card { --card-h: 52vw; }
   .gapsy-section.gapsy-collection .gapsy-card__title, .gapsy-collection .gapsy-card__price { font-size: 1.25rem; }
   .gapsy-collection .gapsy-card__info { flex-direction: column; gap: 0.125rem; }
   .gapsy-collection .gapsy-card__cart { width: 2.75rem; height: 2.75rem; }
