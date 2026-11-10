@@ -1,0 +1,27 @@
+{%- comment -%}
+  Outputs a CSS colour for a colour option value.
+  Order: Shopify swatch colour (Products → option value swatch) → Theme settings → "Modern Bags · Brand →
+  Swatch colours" list ("Olive: #6E6B2F", one per line) → the value name itself as a CSS colour.
+  Params: name (string), swatch (product_option_value.swatch, optional)
+{%- endcomment -%}
+{%- liquid
+  assign sw_color = ''
+  if swatch.color != blank
+    assign sw_color = swatch.color
+  else
+    assign key = name | downcase | strip
+    assign lines = settings.gapsy_swatch_colors | newline_to_br | split: '<br />'
+    for line in lines
+      assign parts = line | split: ':'
+      assign line_name = parts.first | downcase | strip
+      if line_name == key and parts.size > 1
+        assign sw_color = parts.last | strip
+        break
+      endif
+    endfor
+    if sw_color == blank
+      assign sw_color = name | handleize | replace: '-', ''
+    endif
+  endif
+-%}
+{{- sw_color -}}

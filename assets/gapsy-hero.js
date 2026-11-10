@@ -17,6 +17,7 @@
     const badge = el.querySelector('[data-hero-badge]');
     const counter = el.querySelector('[data-hero-counter]');
     const countEl = el.querySelector('[data-hero-count]');
+    const barEl = el.querySelector('[data-hero-bar]');
     const pre = q('.gapsy-pre');
     const show = () => { pre.forEach((n) => n.classList.remove('gapsy-pre')); };
 
@@ -62,13 +63,16 @@
     const loaded = Promise.all(imgs.map((i) => (i.complete ? Promise.resolve() : new Promise((r) => { i.addEventListener('load', r, { once: true }); i.addEventListener('error', r, { once: true }); }))));
     const ready = Promise.race([Promise.all([loaded, document.fonts ? document.fonts.ready : Promise.resolve()]), new Promise((r) => setTimeout(r, 3000))]);
     const count = { v: 0 };
-    const paint = () => { if (countEl) countEl.textContent = Math.round(count.v); };
+    const paint = () => {
+      if (countEl) countEl.textContent = String(Math.round(count.v)).padStart(3, '0');
+      if (barEl) barEl.style.transform = `scaleX(${count.v / 100})`;
+    };
     const pre1 = gsap.to(count, { v: 86, duration: 1.1, ease: 'power2.out', onUpdate: paint, delay: 0.2 });
     let finished = false;
     Promise.all([ready, new Promise((r) => pre1.eventCallback('onComplete', r))]).then(() => {
       if (finished) return;
       gsap.to(count, { v: 100, duration: 0.3, ease: 'power1.in', onUpdate: paint, onComplete: () => {
-        if (counter) gsap.to(counter, { autoAlpha: 0, yPercent: -30, duration: 0.5, ease: 'power3.in' });
+        if (counter) gsap.to(counter, { autoAlpha: 0, y: -12, duration: 0.45, ease: 'power3.in', delay: 0.1 });
         readyDone = true;
         if (tl.paused()) tl.resume();
       } });

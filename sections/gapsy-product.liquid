@@ -91,7 +91,7 @@
                         {%- if v_img != blank -%}
                           {{ v_img | image_url: width: 120 | image_tag: alt: '', loading: 'lazy' }}
                         {%- else -%}
-                          <span class="gapsy-product__swatch-color" style="background: {{ value.name | handleize | replace: '-', '' }};"></span>
+                          <span class="gapsy-product__swatch-color" style="background: {%- render 'gapsy-swatch-color', name: value.name, swatch: value.swatch -%};"></span>
                         {%- endif -%}
                         <span class="gapsy-visually-hidden">{{ value.name }}</span>
                       </label>

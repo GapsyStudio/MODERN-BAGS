@@ -111,12 +111,13 @@ body { background: var(--gapsy-white); }
 .gapsy-card__image { width: 100%; height: 100%; object-fit: contain; object-position: center bottom; padding: 1.25rem 1.25rem 0; transition: transform 1s var(--gapsy-ease), opacity 0.3s; }
 svg.gapsy-card__image { object-fit: cover; padding: 0; }
 @media (hover: hover) { .gapsy-card__media:hover .gapsy-card__image { transform: scale(1.05); } }
-.gapsy-card__swatches { position: absolute; z-index: 2; top: 0.75rem; left: 0.75rem; display: flex; }
-.gapsy-card__swatch { position: relative; width: 2.5rem; height: 2.5rem; margin-right: -1rem; padding: 0.375rem; border: 2px solid #fff; border-radius: 50%; background: #e3e3e3; cursor: pointer; transition: transform 0.4s var(--gapsy-ease), margin 0.4s var(--gapsy-ease); }
-.gapsy-card__swatch img, .gapsy-card__swatch-color { display: block; width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
-.gapsy-card__swatch.is-active { z-index: 1; border-color: var(--gapsy-black); }
-.gapsy-card__swatches:hover .gapsy-card__swatch, .gapsy-card__swatches:focus-within .gapsy-card__swatch { margin-right: 0.25rem; }
-.gapsy-card__swatch:focus-visible { outline: 2px solid var(--gapsy-primary); outline-offset: 2px; }
+.gapsy-card__swatches { position: absolute; z-index: 2; top: 0.75rem; left: 0.75rem; display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.875rem 0.5rem 0.625rem; border-radius: 999px; background: rgba(255, 255, 255, 0.82); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.gapsy-card__swatch { position: relative; flex: none; width: 1rem; height: 1rem; padding: 0; border: 0; border-radius: 50%; background: var(--sw, #ccc); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12); cursor: pointer; transition: transform 0.35s var(--gapsy-ease); }
+.gapsy-card__swatch::after { content: ''; position: absolute; inset: -0.25rem; border: 1.5px solid var(--gapsy-black); border-radius: 50%; transform: scale(0.6); opacity: 0; transition: transform 0.35s var(--gapsy-ease), opacity 0.25s; }
+.gapsy-card__swatch:hover { transform: scale(1.15); }
+.gapsy-card__swatch.is-active::after { transform: none; opacity: 1; }
+.gapsy-card__swatch:focus-visible { outline: 2px solid var(--gapsy-primary); outline-offset: 4px; }
+.gapsy-card__swatch-label { margin-left: 0.25rem; font-family: var(--gapsy-font-condensed); font-weight: 600; font-size: 1rem; line-height: 1; letter-spacing: 0.04em; text-transform: uppercase; }
 .gapsy-card__form { position: absolute; z-index: 2; top: 0.75rem; right: 0.75rem; margin: 0; }
 .gapsy-card__cart { position: relative; display: flex; align-items: center; justify-content: center; width: 4.5rem; height: 4.5rem; padding: 0; border: 0; border-radius: 50%; background: var(--gapsy-black); color: #fff; cursor: pointer; transition: transform 0.4s var(--gapsy-ease), background 0.3s; }
 .gapsy-card__cart:hover { transform: scale(1.08); background: var(--gapsy-primary); }
@@ -134,7 +135,8 @@ svg.gapsy-card__image { object-fit: cover; padding: 0; }
 @media (max-width: 991px) {
   .gapsy-card__cart { width: 3.25rem; height: 3.25rem; }
   .gapsy-card__cart-icon, .gapsy-card__check { width: 1.375rem; height: 1.375rem; }
-  .gapsy-card__swatch { width: 2rem; height: 2rem; padding: 0.25rem; margin-right: 0.25rem; }
+  .gapsy-card__swatches { gap: 0.4rem; padding: 0.375rem 0.625rem 0.375rem 0.5rem; }
+  .gapsy-card__swatch-label { display: none; }
   .gapsy-section .gapsy-card__title { font-size: 1.5rem; }
   .gapsy-card__price { font-size: 1.5rem; }
 }

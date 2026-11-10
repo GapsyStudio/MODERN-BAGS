@@ -1,5 +1,5 @@
 {%- comment -%}
-  Product card: image on a light surface, colour swatches (variant images) top-left,
+  Product card: image on a light surface, colour dots + colour name in a small pill top-left,
   round "add to cart" button top-right, title + price below.
   Params: product, option_name (default 'Color'), sizes, index (for the varying card heights)
   JS: assets/gapsy-products.js (swatch switch + AJAX add to cart). Without JS the swatch/cart
@@ -36,31 +36,31 @@
     {%- if opt_index >= 0 and product.variants.size > 1 -%}
       {%- assign seen = '' -%}
       <div class="gapsy-card__swatches" role="radiogroup" aria-label="{{ product.options_with_values[opt_index].name | escape }}">
+        {%- assign opt_values = product.options_with_values[opt_index].values -%}
         {%- for variant in product.variants -%}
           {%- assign value = variant.options[opt_index] -%}
           {%- assign key = '|' | append: value | append: '|' -%}
           {%- unless seen contains key -%}
             {%- assign seen = seen | append: key -%}
             {%- assign v_img = variant.featured_image | default: product.featured_image -%}
+            {%- assign v_swatch = opt_values | where: 'name', value | first -%}
+            {%- capture sw_color -%}{%- render 'gapsy-swatch-color', name: value, swatch: v_swatch.swatch -%}{%- endcapture -%}
             <button
               type="button"
               class="gapsy-card__swatch{% if variant.id == current.id %} is-active{% endif %}"
+              style="--sw: {{ sw_color }};"
               role="radio"
               aria-checked="{% if variant.id == current.id %}true{% else %}false{% endif %}"
               aria-label="{{ value | escape }}"
               data-swatch
+              data-label="{{ value | escape }}"
               data-variant="{{ variant.id }}"
               data-available="{{ variant.available }}"
               {% if v_img != blank %}data-src="{{ v_img | image_url: width: 1200 }}" data-srcset="{{ v_img | image_url: width: 540 }} 540w, {{ v_img | image_url: width: 960 }} 960w, {{ v_img | image_url: width: 1200 }} 1200w"{% endif %}
-            >
-              {%- if v_img != blank -%}
-                {{ v_img | image_url: width: 96 | image_tag: alt: '', loading: 'lazy' }}
-              {%- else -%}
-                <span class="gapsy-card__swatch-color" style="background: {{ value | handleize | replace: '-', '' }};"></span>
-              {%- endif -%}
-            </button>
+            ></button>
           {%- endunless -%}
         {%- endfor -%}
+        <span class="gapsy-card__swatch-label" data-swatch-label aria-hidden="true">{{ current.options[opt_index] }}</span>
       </div>
     {%- endif -%}
 

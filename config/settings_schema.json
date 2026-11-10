@@ -73,6 +73,13 @@
         "id": "gapsy_text_gradient_to",
         "label": "Text gradient, bottom",
         "default": "#ff7368"
+      },
+      {
+        "type": "textarea",
+        "id": "gapsy_swatch_colors",
+        "label": "Swatch colours",
+        "default": "Olive: #6E6B2F\nPink: #F2A7C3\nBurgundy: #6B1E2C\nBlack: #111111\nRuby: #9B111E\nCrimson: #B3122F\nWhite: #F4F1EA\nBeige: #D8C2A3\nBrown: #7A4A2A",
+        "info": "One per line: Colour name: #hex. Used for colour dots when the option value has no Shopify swatch."
       }
     ]
   },

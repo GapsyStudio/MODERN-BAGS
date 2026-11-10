@@ -38,6 +38,8 @@
       card.querySelectorAll('[data-swatch]').forEach((sw) => {
         const onClick = () => {
           card.querySelectorAll('[data-swatch]').forEach((o) => { o.classList.toggle('is-active', o === sw); o.setAttribute('aria-checked', String(o === sw)); });
+          const label = card.querySelector('[data-swatch-label]');
+          if (label) label.textContent = sw.dataset.label;
           if (idInput) idInput.value = sw.dataset.variant;
           if (button) button.disabled = sw.dataset.available !== 'true';
           if (img && sw.dataset.src) {
