@@ -1,0 +1,15 @@
+{%- comment -%}
+  Page transition overlay: brand-gradient stripes cover the screen when you leave a page and slide
+  away on the next one (same look as the hero loader). Rendered right after <body> in layout/theme.liquid.
+  On/off + stripe count: Theme settings → Modern Bags · Motion. JS: assets/gapsy-transition.js.
+  Off in the theme editor and for reduced motion. Safety: the overlay hides itself after 2.5s.
+{%- endcomment -%}
+{%- if settings.gapsy_page_transition != false and request.design_mode == false -%}
+  {%- assign n = settings.gapsy_transition_stripes | default: 6 -%}
+  {%- assign last = n | minus: 1 -%}
+  <div class="gapsy-pt" aria-hidden="true" data-gapsy-pt style="--n: {{ n }};">
+    {%- for i in (0..last) -%}
+      <div class="gapsy-pt__stripe" style="--i: {{ i }};"><div class="gapsy-pt__fill"></div></div>
+    {%- endfor -%}
+  </div>
+{%- endif -%}

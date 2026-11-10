@@ -159,7 +159,11 @@
   .gapsy-product__media { position: relative; }
   .gapsy-product__track { display: grid; gap: 1.25rem; }
   .gapsy-product__slide { margin: 0; height: 46rem; background: var(--media-bg, #ebebeb); overflow: hidden; scroll-margin-top: 2rem; }
-  .gapsy-product__img { width: 100%; height: 100%; object-fit: contain; padding: 3rem; }
+  .gapsy-product__img { width: 100%; height: 100%; object-fit: contain; padding: 3rem; transition: transform 0.6s var(--gapsy-ease); }
+  @media (hover: hover) and (min-width: 992px) {
+    .gapsy-product__slide { cursor: zoom-in; }
+    .gapsy-product__slide.is-zoom .gapsy-product__img { transform: scale(1.8); }
+  }
   .gapsy-product__slide video, .gapsy-product__slide iframe { width: 100%; height: 100%; object-fit: cover; }
   .gapsy-product__counter { display: none; }
   .gapsy-product__sticky { position: sticky; top: 2rem; display: flex; flex-direction: column; gap: 1.5rem; }

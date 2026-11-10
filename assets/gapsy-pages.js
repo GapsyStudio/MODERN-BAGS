@@ -120,6 +120,20 @@
       }
     });
 
+    // desktop: hover zoom that follows the cursor
+    if (desktop && matchMedia('(hover: hover)').matches) {
+      slides.forEach((slide) => {
+        const img = slide.querySelector('.gapsy-product__img');
+        if (!img || img.tagName !== 'IMG') return;
+        on(slide, 'mouseenter', () => slide.classList.add('is-zoom'));
+        on(slide, 'mouseleave', () => slide.classList.remove('is-zoom'));
+        on(slide, 'mousemove', (e) => {
+          const r = slide.getBoundingClientRect();
+          img.style.transformOrigin = `${((e.clientX - r.left) / r.width) * 100}% ${((e.clientY - r.top) / r.height) * 100}%`;
+        });
+      });
+    }
+
     // mobile gallery counter
     if (track && indexEl) {
       on(track, 'scroll', () => { indexEl.textContent = Math.round(track.scrollLeft / track.clientWidth) + 1; });

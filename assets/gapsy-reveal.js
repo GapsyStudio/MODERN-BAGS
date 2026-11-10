@@ -32,7 +32,7 @@
     const inner = wrap.querySelector('img, svg');
     const tl = gsap.timeline({ scrollTrigger: enter(opts.trigger || wrap, opts.start), delay: opts.delay || 0 });
     tl.from(wrap, { clipPath: opts.from || 'inset(100% 0% 0% 0%)', duration: 1.2, ease: 'expo.inOut', clearProps: 'clipPath' });
-    if (inner) tl.from(inner, { scale: 1.25, duration: 1.6, ease: 'expo.out' }, 0.2);
+    if (inner) tl.from(inner, { scale: 1.25, duration: 1.6, ease: 'expo.out', clearProps: 'transform' }, 0.2);
     return tl;
   };
   Gapsy.parallax = (node, px, trigger) => {

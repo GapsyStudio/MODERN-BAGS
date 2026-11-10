@@ -139,6 +139,15 @@ svg.gapsy-card__image { object-fit: cover; padding: 0; }
   .gapsy-card__price { font-size: 1.5rem; }
 }
 
+/* ---------- Page transition (snippets/gapsy-transition.liquid) ---------- */
+.gapsy-pt { position: fixed; inset: 0; z-index: 9999; display: grid; grid-template-rows: repeat(var(--n, 6), 1fr); pointer-events: none; }
+.gapsy-pt__stripe { position: relative; overflow: hidden; margin-bottom: -1px; clip-path: inset(0% 100% 0% 0%); }
+.gapsy-pt__fill { position: absolute; left: 0; right: 0; top: calc(var(--i) * -100%); height: calc(var(--n, 6) * 100%); background: var(--gapsy-gradient); }
+.gapsy-pt-in .gapsy-pt__stripe { clip-path: inset(0% 0% 0% 0%); }
+.gapsy-pt-in .gapsy-pt { animation: gapsy-pt-safe 0s 2.5s forwards; }
+.gapsy-pt-out .gapsy-pt { pointer-events: auto; }
+@keyframes gapsy-pt-safe { to { visibility: hidden; } }
+
 @media (prefers-reduced-motion: reduce) {
   .gapsy-badge__ring { animation: none; }
   .gapsy-js .gapsy-pre { opacity: 1; animation: none; }

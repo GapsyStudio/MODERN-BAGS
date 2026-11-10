@@ -94,6 +94,21 @@
         "max": 30,
         "step": 1,
         "default": 10
+      },
+      {
+        "type": "checkbox",
+        "id": "gapsy_page_transition",
+        "label": "Page transition (gradient stripes)",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "gapsy_transition_stripes",
+        "label": "Transition stripes",
+        "min": 3,
+        "max": 10,
+        "step": 1,
+        "default": 6
       }
     ]
   },
