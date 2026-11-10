@@ -28,7 +28,7 @@
           assign img = b.image | default: col.featured_image
         -%}
         <li class="gapsy-cats__item" data-cats-item {{ block.shopify_attributes }}>
-          <a href="{{ url }}" class="gapsy-cats__card">
+          <a href="{{ url }}" class="gapsy-cats__card" data-cursor="{{ settings.gapsy_cursor_label_category | default: 'Shop' | escape }}">
             <span class="gapsy-cats__pill" data-cats-pill>
               <span class="gapsy-cats__img" style="--img-y: {{ b.image_offset }}%; --img-scale: {{ b.image_scale | divided_by: 100.0 }};" data-cats-img>
                 {%- render 'gapsy-image', image: img, sizes: '(min-width: 992px) 31vw, 72vw', alt: title -%}
@@ -47,7 +47,7 @@
       <div class="gapsy-cats__foot" data-cats-foot>
         {%- if s.text != blank -%}<div class="gapsy-cats__text">{{ s.text }}</div>{%- endif -%}
         {%- if s.link_label != blank -%}
-          <a href="{{ s.link_url | default: routes.collections_url }}" class="gapsy-link">
+          <a href="{{ s.link_url | default: routes.collections_url }}" class="gapsy-link" data-magnetic="0.2">
             <span class="gapsy-link__label">{{ s.link_label }}</span>
             {%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-link__icon' -%}
           </a>

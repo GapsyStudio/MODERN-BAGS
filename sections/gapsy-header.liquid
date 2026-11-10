@@ -36,7 +36,7 @@
         {%- endfor -%}
         {%- if section.settings.show_cart -%}
           <li data-header-item>
-            <a href="{{ routes.cart_url }}" class="gapsy-header__link">{{ section.settings.cart_label }} (<span data-cart-count>{{ cart.item_count }}</span>)</a>
+            <a href="{{ routes.cart_url }}" class="gapsy-header__link" data-cart-open>{{ section.settings.cart_label }} (<span data-cart-count>{{ cart.item_count }}</span>)</a>
           </li>
         {%- endif -%}
       </ul>
@@ -44,7 +44,7 @@
 
     <div class="gapsy-header__actions">
       {%- if section.settings.cta_label != blank -%}
-        <a href="{{ section.settings.cta_url | default: routes.all_products_collection_url }}" class="gapsy-link gapsy-header__cta" data-header-item>
+        <a href="{{ section.settings.cta_url | default: routes.all_products_collection_url }}" class="gapsy-link gapsy-header__cta" data-header-item data-magnetic="0.25">
           <span class="gapsy-link__label">{{ section.settings.cta_label }}</span>
           {%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-link__icon' -%}
         </a>
@@ -58,7 +58,7 @@
           {%- endif -%}
         </a>
       {%- endif -%}
-      <a href="{{ routes.cart_url }}" class="gapsy-header__m-cart" aria-label="{{ section.settings.cart_label | escape }}">
+      <a href="{{ routes.cart_url }}" class="gapsy-header__m-cart" data-cart-open aria-label="{{ section.settings.cart_label | escape }}">
         {%- render 'gapsy-icon', icon: 'cart', class: 'gapsy-header__m-icon' -%}
         <span data-cart-count>{{ cart.item_count }}</span>
       </a>
@@ -76,7 +76,7 @@
         <li><a href="{{ link.url }}" class="gapsy-header__menu-link" data-menu-link>{{ link.title }}</a></li>
       {%- endfor -%}
       {%- if section.settings.show_cart -%}
-        <li><a href="{{ routes.cart_url }}" class="gapsy-header__menu-link" data-menu-link>{{ section.settings.cart_label }} (<span data-cart-count>{{ cart.item_count }}</span>)</a></li>
+        <li><a href="{{ routes.cart_url }}" class="gapsy-header__menu-link" data-menu-link data-cart-open>{{ section.settings.cart_label }} (<span data-cart-count>{{ cart.item_count }}</span>)</a></li>
       {%- endif -%}
     </ul>
     {%- if section.settings.cta_label != blank -%}

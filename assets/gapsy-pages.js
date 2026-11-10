@@ -110,9 +110,11 @@
       addBtn.classList.add('is-loading');
       try {
         await addToCart([{ id: Number(idInput.value), quantity: qty ? Math.max(1, parseInt(qty.value, 10) || 1) : 1 }]);
-        toast.classList.add('is-visible');
-        clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 4000);
+        if (!Gapsy.cart) { // the cart drawer opens by itself; the toast is the fallback
+          toast.classList.add('is-visible');
+          clearTimeout(toastTimer);
+          toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 4000);
+        }
       } catch (err) {
         errorEl.textContent = err.message; errorEl.hidden = false;
       } finally {

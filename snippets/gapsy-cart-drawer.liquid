@@ -1,0 +1,68 @@
+{%- comment -%}
+  Gapsy · Cart drawer ("Your bag") — slides in from the right when a product is added or the
+  header cart is clicked. Shows a free-shipping progress bar, items with quantity steppers,
+  subtotal and the Checkout button (goes to Shopify checkout).
+  Rendered in layout/theme.liquid before </body>. Content is drawn by assets/gapsy-cart-drawer.js
+  from /cart.js; the first paint uses Liquid so it works before JS loads.
+  Settings: Theme settings → Modern Bags · Cart drawer. Off → links go to the /cart page.
+{%- endcomment -%}
+{%- if settings.gapsy_cart_drawer != false -%}
+  {%- liquid
+    assign threshold = settings.gapsy_free_shipping | default: 150 | times: 100
+    assign fs_text = settings.gapsy_free_shipping_text | default: 'You are [amount] away from free shipping'
+    assign fs_done = settings.gapsy_free_shipping_done | default: 'You have free shipping!'
+  -%}
+  <div
+    class="gapsy-drawer"
+    id="GapsyCartDrawer"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="GapsyCartDrawerTitle"
+    data-cart-drawer
+    data-threshold="{{ threshold }}"
+    data-fs-text="{{ fs_text | escape }}"
+    data-fs-done="{{ fs_done | escape }}"
+    data-empty-text="{{ settings.gapsy_cart_empty | default: 'Your bag is empty' | escape }}"
+    data-remove-label="Remove"
+    hidden
+  >
+    <div class="gapsy-drawer__overlay" data-drawer-close></div>
+    <div class="gapsy-drawer__panel" data-drawer-panel>
+      <div class="gapsy-drawer__stripes" aria-hidden="true">
+        {%- for i in (0..4) -%}<span style="--i: {{ i }};"></span>{%- endfor -%}
+      </div>
+      <header class="gapsy-drawer__head">
+        <h2 class="gapsy-drawer__title" id="GapsyCartDrawerTitle"><em>your</em> Bag <sup data-drawer-count>{{ cart.item_count }}</sup></h2>
+        <button type="button" class="gapsy-drawer__close" data-drawer-close aria-label="Close">{%- render 'gapsy-icon', icon: 'close', class: 'gapsy-drawer__close-icon' -%}</button>
+      </header>
+
+      {%- if threshold > 0 -%}
+        <div class="gapsy-drawer__ship" data-drawer-ship>
+          <p data-ship-text></p>
+          <div class="gapsy-drawer__bar"><span data-ship-bar></span></div>
+        </div>
+      {%- endif -%}
+
+      <div class="gapsy-drawer__body" data-lenis-prevent>
+        <ul class="gapsy-drawer__items" role="list" data-drawer-items></ul>
+        <div class="gapsy-drawer__empty" data-drawer-empty hidden>
+          <p>{{ settings.gapsy_cart_empty | default: 'Your bag is empty' }}</p>
+          <a href="{{ routes.all_products_collection_url }}" class="gapsy-link" data-drawer-close-link><span class="gapsy-link__label">Shop bags</span>{%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-link__icon' -%}</a>
+        </div>
+      </div>
+
+      <footer class="gapsy-drawer__foot" data-drawer-foot>
+        <div class="gapsy-drawer__total"><span>Subtotal</span><strong data-drawer-total>{{ cart.total_price | money }}</strong></div>
+        <p class="gapsy-drawer__note">{{ settings.gapsy_cart_note | default: 'Taxes and shipping calculated at checkout.' }}</p>
+        <form action="{{ routes.cart_url }}" method="post" class="gapsy-drawer__form">
+          <button type="submit" name="checkout" class="gapsy-btn gapsy-btn--block" data-magnetic>
+            <span>Checkout</span>
+            {%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-btn__icon' -%}
+          </button>
+        </form>
+        <a href="{{ routes.cart_url }}" class="gapsy-drawer__view">View full cart</a>
+      </footer>
+    </div>
+    <script type="application/json" data-drawer-money>{{ shop.money_format | json }}</script>
+  </div>
+{%- endif -%}

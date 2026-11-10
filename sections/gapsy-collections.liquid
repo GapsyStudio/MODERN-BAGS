@@ -14,7 +14,7 @@
       {%- for c in collections -%}
         {%- if hidden contains c.handle -%}{%- continue -%}{%- endif -%}
         <li data-page-fade>
-          <a href="{{ c.url }}" class="gapsy-colls__card">
+          <a href="{{ c.url }}" class="gapsy-colls__card" data-cursor="{{ settings.gapsy_cursor_label_category | default: 'Shop' | escape }}">
             <span class="gapsy-colls__pill">
               {%- render 'gapsy-image', image: c.featured_image, sizes: '(min-width: 992px) 31vw, 50vw', alt: c.title -%}
             </span>

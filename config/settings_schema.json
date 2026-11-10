@@ -109,6 +109,66 @@
         "max": 10,
         "step": 1,
         "default": 6
+      },
+      {
+        "type": "checkbox",
+        "id": "gapsy_cursor",
+        "label": "Custom cursor (desktop)",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "gapsy_cursor_label",
+        "label": "Cursor label on products",
+        "default": "View"
+      },
+      {
+        "type": "text",
+        "id": "gapsy_cursor_label_category",
+        "label": "Cursor label on categories",
+        "default": "Shop"
+      }
+    ]
+  },
+  {
+    "name": "Modern Bags · Cart drawer",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "gapsy_cart_drawer",
+        "label": "Open the bag drawer instead of the cart page",
+        "default": true
+      },
+      {
+        "type": "number",
+        "id": "gapsy_free_shipping",
+        "label": "Free shipping from (store currency, 0 = hide bar)",
+        "default": 150
+      },
+      {
+        "type": "text",
+        "id": "gapsy_free_shipping_text",
+        "label": "Progress text",
+        "default": "You are [amount] away from free shipping",
+        "info": "[amount] = what is left."
+      },
+      {
+        "type": "text",
+        "id": "gapsy_free_shipping_done",
+        "label": "Reached text",
+        "default": "You've unlocked free shipping!"
+      },
+      {
+        "type": "text",
+        "id": "gapsy_cart_empty",
+        "label": "Empty bag text",
+        "default": "Your bag is empty"
+      },
+      {
+        "type": "text",
+        "id": "gapsy_cart_note",
+        "label": "Note under subtotal",
+        "default": "Taxes and shipping calculated at checkout."
       }
     ]
   },

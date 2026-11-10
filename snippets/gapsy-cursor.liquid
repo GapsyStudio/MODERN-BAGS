@@ -1,0 +1,10 @@
+{%- comment -%}
+  Custom cursor: a ring that follows the mouse (desktop with a mouse only), grows over links and buttons,
+  and shows a gradient bubble with a label over elements with data-cursor="…" (product photos, categories).
+  The normal cursor stays visible. On/off: Theme settings → Modern Bags · Motion. JS: assets/gapsy-cursor.js.
+{%- endcomment -%}
+{%- if settings.gapsy_cursor != false and request.design_mode == false -%}
+  <div class="gapsy-cursor" aria-hidden="true" data-gapsy-cursor>
+    <div class="gapsy-cursor__ring"><span class="gapsy-cursor__label" data-cursor-text></span></div>
+  </div>
+{%- endif -%}

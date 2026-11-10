@@ -47,6 +47,8 @@
     <script src="{{ 'gapsy-footer.js' | asset_url }}" defer></script>
     <script src="{{ 'gapsy-pages.js' | asset_url }}" defer></script>
     <script src="{{ 'gapsy-transition.js' | asset_url }}" defer></script>
+    <script src="{{ 'gapsy-cart-drawer.js' | asset_url }}" defer></script>
+    <script src="{{ 'gapsy-cursor.js' | asset_url }}" defer></script>
 
     {% if request.design_mode %}
       {%- render 'theme-editor' -%}
@@ -183,5 +185,7 @@
     {% if settings.quick_add or settings.mobile_quick_add %}
       {% render 'quick-add-modal' %}
     {% endif %}
+    {%- render 'gapsy-cart-drawer' -%}
+    {%- render 'gapsy-cursor' -%}
   </body>
 </html>

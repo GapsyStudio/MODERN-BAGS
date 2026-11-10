@@ -68,7 +68,9 @@
 
     {%- if s.badge_text != blank -%}
       <div class="gapsy-hero__badge{% if s.intro_animation %} gapsy-pre{% endif %}" data-hero-badge>
+        <div data-magnetic="0.3">
         {%- render 'gapsy-badge', text: s.badge_text, url: s.badge_url, id: section.id -%}
+        </div>
       </div>
     {%- endif -%}
   </div>

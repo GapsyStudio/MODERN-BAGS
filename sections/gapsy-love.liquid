@@ -33,7 +33,7 @@
       <div class="gapsy-love__text" data-love-fade>{{ s.text }}</div>
     {%- endif -%}
     {%- if s.link_label != blank -%}
-      <a href="{{ s.link_url | default: routes.all_products_collection_url }}" class="gapsy-link gapsy-love__link" data-love-fade>
+      <a href="{{ s.link_url | default: routes.all_products_collection_url }}" class="gapsy-link gapsy-love__link" data-love-fade data-magnetic="0.2">
         <span class="gapsy-link__label">{{ s.link_label }}</span>
         {%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-link__icon' -%}
       </a>

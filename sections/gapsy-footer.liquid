@@ -53,7 +53,7 @@
               <label for="GapsyNewsletterEmail" class="gapsy-visually-hidden">{{ s.placeholder }}</label>
               <div class="gapsy-footer__field">
                 <input id="GapsyNewsletterEmail" type="email" name="contact[email]" required autocomplete="email" placeholder="{{ s.placeholder | escape }}" class="gapsy-footer__input"{% if form.errors %} aria-invalid="true" aria-describedby="GapsyNewsletterError"{% endif %}>
-                <button type="submit" class="gapsy-footer__submit" aria-label="{{ s.submit_label | escape }}">
+                <button type="submit" class="gapsy-footer__submit" data-magnetic="0.4" aria-label="{{ s.submit_label | escape }}">
                   {%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-footer__submit-icon' -%}
                 </button>
               </div>

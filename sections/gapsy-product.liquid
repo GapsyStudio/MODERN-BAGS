@@ -112,7 +112,7 @@
                 <button type="button" class="gapsy-qty__btn" data-qty-plus aria-label="Increase quantity">+</button>
               </div>
             {%- endif -%}
-            <button type="submit" name="add" class="gapsy-btn gapsy-product__add" data-product-add data-add-label="{{ s.add_label | escape }}" data-sold-out-label="{{ s.sold_out_label | escape }}" {% unless current.available %}disabled{% endunless %}>
+            <button type="submit" name="add" class="gapsy-btn gapsy-product__add" data-magnetic="0.12" data-product-add data-add-label="{{ s.add_label | escape }}" data-sold-out-label="{{ s.sold_out_label | escape }}" {% unless current.available %}disabled{% endunless %}>
               <span data-product-add-label>{% if current.available %}{{ s.add_label }}{% else %}{{ s.sold_out_label }}{% endif %}</span>
               {%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-btn__icon' -%}
             </button>
