@@ -1,0 +1,15 @@
+{%- comment -%}
+  Section heading: Anton uppercase; words set in italic in the editor become Playfair Display Italic.
+  Params: text (inline_richtext), size (px @1440), em_size (px @1440), size_mobile (px), tag (h1/h2), class, align
+  Animated by section scripts via [data-reveal-heading] (letters rise on scroll).
+{%- endcomment -%}
+{%- liquid
+  assign h_tag = tag | default: 'h2'
+  assign h_size = size | default: 110 | divided_by: 16.0
+  assign h_em = em_size | default: 64 | divided_by: 16.0
+  assign h_m = size_mobile | default: 56 | divided_by: 16.0
+  assign h_em_m = h_em | times: h_m | divided_by: h_size
+-%}
+{%- if text != blank -%}
+  <{{ h_tag }} class="gapsy-h {{ class }}" data-reveal-heading style="--gapsy-h-size: {{ h_size }}rem; --gapsy-h-em-size: {{ h_em }}rem; --gapsy-h-size-m: {{ h_m }}rem; --gapsy-h-em-size-m: {{ h_em_m }}rem;{% if align != blank %} text-align: {{ align }};{% endif %}">{{ text }}</{{ h_tag }}>
+{%- endif -%}

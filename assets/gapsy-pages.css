@@ -1,0 +1,71 @@
+/*
+  Gapsy · Modern Bags — shared styles of the inner pages (product, collection, cart).
+  Uses the tokens and rem system from assets/gapsy.css.
+*/
+
+/* ---------- Page head ---------- */
+.gapsy-crumbs { display: flex; flex-wrap: wrap; gap: 0.5rem; font-family: var(--gapsy-font-condensed); font-weight: 500; font-size: 1.25rem; line-height: 1.2; text-transform: uppercase; color: var(--gapsy-grey-80); }
+.gapsy-crumbs a { transition: color 0.3s; }
+.gapsy-crumbs a:hover { color: var(--gapsy-primary); }
+.gapsy-crumbs span[aria-hidden] { opacity: 0.4; }
+
+/* ---------- Buttons ---------- */
+.gapsy-btn {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem;
+  min-height: 4.5rem; padding: 0 2rem; border: 0; border-radius: 999px; overflow: hidden; isolation: isolate;
+  background: var(--gapsy-black); color: var(--gapsy-white); cursor: pointer;
+  font-family: var(--gapsy-font-condensed-sc); font-weight: 600; font-size: 2rem; line-height: 1; text-transform: uppercase; text-decoration: none;
+  transition: color 0.4s var(--gapsy-ease);
+}
+.gapsy-btn::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--gapsy-primary); transform: translateY(101%); transition: transform 0.5s var(--gapsy-ease); }
+.gapsy-btn:hover::before, .gapsy-btn:focus-visible::before { transform: none; }
+.gapsy-btn:focus-visible { outline: 2px solid var(--gapsy-primary); outline-offset: 3px; }
+.gapsy-btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+.gapsy-btn[disabled]::before { display: none; }
+.gapsy-btn.is-loading { pointer-events: none; opacity: 0.7; }
+.gapsy-btn__icon { width: 1.75rem; height: 1.75rem; transition: transform 0.5s var(--gapsy-ease); }
+.gapsy-btn:hover .gapsy-btn__icon { transform: rotate(45deg); }
+.gapsy-btn--block { width: 100%; }
+.gapsy-btn--light { background: var(--gapsy-white); color: var(--gapsy-black); }
+.gapsy-btn--light:hover { color: var(--gapsy-white); }
+@media (max-width: 991px) { .gapsy-btn { min-height: 3.75rem; font-size: 1.625rem; } }
+
+/* ---------- Quantity stepper ---------- */
+.gapsy-qty { display: inline-flex; align-items: center; height: 3.5rem; border: 1px solid rgba(0, 0, 0, 0.2); border-radius: 999px; }
+.gapsy-qty__btn { width: 3rem; height: 100%; padding: 0; border: 0; background: none; color: inherit; font-size: 1.5rem; line-height: 1; cursor: pointer; }
+.gapsy-qty__btn:hover { color: var(--gapsy-primary); }
+.gapsy-section .gapsy-qty__input { width: 2.75rem; height: 100%; padding: 0; border: 0; border-radius: 0; background: transparent !important; box-shadow: none; text-align: center; font: 500 1.125rem/1 var(--gapsy-font-sans); color: inherit; -moz-appearance: textfield; appearance: textfield; }
+.gapsy-qty__input::-webkit-outer-spin-button, .gapsy-qty__input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* ---------- Accordion ---------- */
+.gapsy-acc { border-top: 1px solid rgba(0, 0, 0, 0.15); }
+.gapsy-acc:last-child { border-bottom: 1px solid rgba(0, 0, 0, 0.15); }
+.gapsy-acc > summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.25rem 0; list-style: none; cursor: pointer; font-family: var(--gapsy-font-condensed); font-weight: 600; font-size: 1.75rem; line-height: 1.2; text-transform: uppercase; }
+.gapsy-acc > summary::-webkit-details-marker { display: none; }
+.gapsy-acc__icon { position: relative; width: 1rem; height: 1rem; flex: none; }
+.gapsy-acc__icon::before, .gapsy-acc__icon::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; background: currentColor; transition: transform 0.4s var(--gapsy-ease); }
+.gapsy-acc__icon::after { transform: rotate(90deg); }
+.gapsy-acc[open] .gapsy-acc__icon::after { transform: rotate(0deg); }
+.gapsy-acc__body { padding-bottom: 1.5rem; }
+
+/* ---------- Rich text ---------- */
+.gapsy-rte { font-size: 1.0625rem; line-height: 1.6; color: var(--gapsy-grey-80); }
+.gapsy-rte > * + * { margin-top: 0.75em; }
+.gapsy-rte a { color: var(--gapsy-primary); text-decoration: underline; }
+.gapsy-rte ul { list-style: disc; padding-left: 1.25em; }
+
+/* ---------- Toast ---------- */
+.gapsy-toast {
+  position: fixed; z-index: 200; right: calc(var(--gapsy-gutter) + var(--gapsy-sbw, 0px)); bottom: var(--gapsy-gutter);
+  display: flex; align-items: center; gap: 1.25rem; max-width: calc(100vw - 2 * var(--gapsy-gutter)); padding: 1rem 1rem 1rem 1.5rem;
+  border-radius: 999px; background: var(--gapsy-black); color: var(--gapsy-white); font-family: var(--gapsy-font-sans); font-size: 1rem;
+  transform: translateY(150%); visibility: hidden; transition: transform 0.6s var(--gapsy-ease), visibility 0s 0.6s;
+}
+.gapsy-toast.is-visible { transform: none; visibility: visible; transition: transform 0.6s var(--gapsy-ease); }
+.gapsy-toast a { font-family: var(--gapsy-font-condensed-sc); font-weight: 600; font-size: 1.5rem; text-transform: uppercase; text-decoration: underline; color: var(--gapsy-text-grad-from); white-space: nowrap; }
+
+/* ---------- Pagination ---------- */
+.gapsy-pagination { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 4rem; font-family: var(--gapsy-font-condensed); font-weight: 600; font-size: 1.75rem; }
+.gapsy-pagination a, .gapsy-pagination span { display: inline-flex; align-items: center; justify-content: center; min-width: 3rem; height: 3rem; padding: 0 0.75rem; border-radius: 999px; }
+.gapsy-pagination a:hover { color: var(--gapsy-primary); }
+.gapsy-pagination .is-current { background: var(--gapsy-black); color: var(--gapsy-white); }

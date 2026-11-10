@@ -1,0 +1,177 @@
+{%- comment -%}
+  Gapsy · Hero — "the THE STYLE YOU / CARRY DAILY".
+  Data: heading (italic prefix + 2 lines), 2 short texts, model cut-out (PNG with transparency),
+  2 side photos, rotating badge, background (gradient from colours or an image).
+  The background is cut into horizontal stripes: on load they slide in from the left and close up
+  into one block (the "loader"), then the heading letters, the model and the photos reveal.
+  JS: assets/gapsy-hero.js. Mobile: stacked layout, same intro. Reduced motion: no animation.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign stripes = s.stripes | plus: 0
+  assign last = stripes | minus: 1
+-%}
+<section
+  class="gapsy-section gapsy-hero"
+  data-gapsy-section="hero"
+  {% if s.intro_animation %}data-gapsy-intro{% endif %}
+  data-parallax="{{ s.parallax }}"
+  {% if s.anchor_id != blank %}id="{{ s.anchor_id | handleize }}"{% endif %}
+  style="--hero-from: {{ s.gradient_from }}; --hero-to: {{ s.gradient_to }}; --hero-h: {{ s.heading_size | divided_by: 16.0 }}rem; --hero-em: {{ s.prefix_size | divided_by: 16.0 }}rem; --hero-text: {{ s.text_color }}; --gapsy-badge-speed: {{ s.badge_speed }}s;"
+>
+  <h1 class="gapsy-hero__title{% if s.intro_animation %} gapsy-pre{% endif %}" data-hero-title>
+    {%- if s.heading_prefix != blank -%}<em class="gapsy-hero__prefix" data-hero-prefix>{{ s.heading_prefix }}</em>{%- endif -%}
+    <span class="gapsy-hero__line" data-hero-line>{{ s.heading_line_1 }}</span>
+    <span class="gapsy-hero__line gapsy-hero__line--2" data-hero-line>{{ s.heading_line_2 }}</span>
+  </h1>
+
+  <div class="gapsy-hero__stage" data-hero-stage>
+    <div class="gapsy-hero__bg" aria-hidden="true" style="--n: {{ stripes }};">
+      {%- for i in (0..last) -%}
+        <div class="gapsy-hero__stripe{% if s.intro_animation %} gapsy-pre{% endif %}" data-hero-stripe style="--i: {{ i }};">
+          <div class="gapsy-hero__stripe-fill">
+            {%- if s.background_image != blank -%}
+              {{ s.background_image | image_url: width: 2400 | image_tag: alt: '', loading: 'eager', widths: '960, 1440, 1920, 2400', sizes: '100vw' }}
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <div class="gapsy-hero__model{% if s.intro_animation %} gapsy-pre{% endif %}" data-hero-model>
+      <div class="gapsy-hero__model-inner" data-hero-model-inner>
+        {%- render 'gapsy-image', image: s.model_image, sizes: '(min-width: 992px) 52vw, 90vw', loading: 'eager', class: 'gapsy-hero__model-img' -%}
+      </div>
+    </div>
+
+    {%- if s.text_top != blank -%}
+      <p class="gapsy-hero__text gapsy-hero__text--top{% if s.intro_animation %} gapsy-pre{% endif %}" data-hero-text>{{ s.text_top }}</p>
+    {%- endif -%}
+    {%- if s.text_bottom != blank -%}
+      <p class="gapsy-hero__text gapsy-hero__text--bottom{% if s.intro_animation %} gapsy-pre{% endif %}" data-hero-text>{{ s.text_bottom }}</p>
+    {%- endif -%}
+
+    {%- if s.show_left_image -%}
+      <a class="gapsy-hero__photo gapsy-hero__photo--left{% if s.intro_animation %} gapsy-pre{% endif %}"{% if s.left_image_link != blank %} href="{{ s.left_image_link }}"{% endif %} data-hero-photo data-speed="{{ s.left_speed }}">
+        <span class="gapsy-media gapsy-hero__photo-media" data-hero-photo-media>
+          {%- render 'gapsy-image', image: s.left_image, sizes: '(min-width: 992px) 14vw, 30vw', loading: 'eager' -%}
+        </span>
+      </a>
+    {%- endif -%}
+    {%- if s.show_right_image -%}
+      <a class="gapsy-hero__photo gapsy-hero__photo--right{% if s.intro_animation %} gapsy-pre{% endif %}"{% if s.right_image_link != blank %} href="{{ s.right_image_link }}"{% endif %} data-hero-photo data-speed="{{ s.right_speed }}">
+        <span class="gapsy-media gapsy-hero__photo-media" data-hero-photo-media>
+          {%- render 'gapsy-image', image: s.right_image, sizes: '(min-width: 992px) 20vw, 34vw', loading: 'eager' -%}
+        </span>
+      </a>
+    {%- endif -%}
+
+    {%- if s.badge_text != blank -%}
+      <div class="gapsy-hero__badge{% if s.intro_animation %} gapsy-pre{% endif %}" data-hero-badge>
+        {%- render 'gapsy-badge', text: s.badge_text, url: s.badge_url, id: section.id -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .gapsy-hero { --hero-stage-top: 26.3125rem; height: 72.9375rem; color: var(--gapsy-black); }
+  .gapsy-hero__title {
+    position: absolute; z-index: 3; left: 0; right: 0; top: 4.1875rem; width: max-content; margin-inline: auto;
+    display: inline-grid; grid-template-columns: auto auto; column-gap: 0.9rem; margin-block: 0;
+    font-family: var(--gapsy-font-display); font-weight: 400; font-size: var(--hero-h); line-height: 0.97;
+    letter-spacing: 0.011em; text-transform: uppercase; white-space: nowrap;
+  }
+  .gapsy-hero__prefix { grid-column: 1; grid-row: 1; align-self: end; margin-bottom: 0.08em; font-family: var(--gapsy-font-serif); font-style: italic; font-size: var(--hero-em); line-height: 1; text-transform: none; letter-spacing: 0; }
+  .gapsy-hero__line { grid-column: 2; grid-row: 1; display: block; }
+  .gapsy-hero__line--2 { grid-row: 2; margin-left: -0.15em; }
+  .gapsy-hero__title:not(:has(.gapsy-hero__prefix)) { grid-template-columns: auto; }
+  .gapsy-hero__title:not(:has(.gapsy-hero__prefix)) .gapsy-hero__line { grid-column: 1; }
+
+  .gapsy-hero__stage { position: absolute; inset: var(--hero-stage-top) 0 0 0; }
+  .gapsy-hero__bg { position: absolute; inset: 0; display: grid; grid-template-rows: repeat(var(--n), 1fr); }
+  .gapsy-hero__stripe { position: relative; overflow: hidden; margin-bottom: -1px; }
+  .gapsy-hero__stripe-fill { position: absolute; left: 0; right: 0; top: calc(var(--i) * -100%); height: calc(var(--n) * 100%); background: linear-gradient(90deg, var(--hero-from), var(--hero-to)); }
+  .gapsy-hero__stripe-fill img { width: 100%; height: 100%; object-fit: cover; object-position: bottom; }
+
+  .gapsy-hero__model { position: absolute; z-index: 2; left: 22.5625rem; top: -7.6875rem; width: 46.125rem; height: 69.1875rem; pointer-events: none; }
+  .gapsy-hero__model-inner, .gapsy-hero__model-img { width: 100%; height: 100%; }
+  .gapsy-hero__model-img { object-fit: contain; object-position: top center; }
+  .gapsy-hero__model .gapsy-placeholder { background: transparent; }
+
+  .gapsy-hero__text { position: absolute; z-index: 3; font-family: var(--gapsy-font-condensed); font-weight: 500; text-transform: uppercase; color: var(--hero-text); }
+  .gapsy-hero__text--top { left: 5.8125rem; top: 3.9375rem; width: 24.1875rem; font-size: 1.9375rem; line-height: 1.2; }
+  .gapsy-hero__text--bottom { left: 3.5625rem; top: 35.875rem; width: 16.5rem; font-size: 2.125rem; line-height: 1.1; }
+
+  .gapsy-hero__photo { position: absolute; z-index: 1; display: block; }
+  .gapsy-hero__photo-media { display: block; width: 100%; height: 100%; }
+  .gapsy-hero__photo-media img { transition: transform 1s var(--gapsy-ease); }
+  @media (hover: hover) { a.gapsy-hero__photo[href]:hover .gapsy-hero__photo-media img { transform: scale(1.06); } }
+  .gapsy-hero__photo--left { left: 6.6875rem; top: 15.5rem; width: 12.5rem; height: 15.3125rem; }
+  .gapsy-hero__photo--right { left: 65.9375rem; top: 4.8125rem; width: 17.875rem; height: 22.125rem; }
+  .gapsy-hero__badge { position: absolute; z-index: 3; left: 73.125rem; top: 31rem; --gapsy-badge-size: 13.125rem; }
+
+  @media (max-width: 991px) {
+    .gapsy-hero { height: auto; padding-top: 1.5rem; }
+    .gapsy-hero__title { position: relative; left: auto; right: auto; top: auto; display: grid; width: max-content; margin-inline: auto; font-size: 13.4vw; column-gap: 0.5rem; }
+    .gapsy-hero__prefix { font-size: 7.5vw; }
+    .gapsy-hero__stage { position: relative; inset: auto; height: 132vw; margin-top: 12vw; }
+    .gapsy-hero__model { left: 0; right: 0; margin-inline: auto; top: -12vw; width: 86vw; height: 144vw; }
+    .gapsy-hero__text--top { left: var(--gapsy-gutter); top: 4vw; width: 46vw; font-size: 4.4vw; }
+    .gapsy-hero__text--bottom { left: var(--gapsy-gutter); top: auto; bottom: 6vw; width: 40vw; font-size: 4.4vw; }
+    .gapsy-hero__photo--left { left: var(--gapsy-gutter); top: 44vw; width: 23vw; height: 28vw; }
+    .gapsy-hero__photo--right { left: auto; right: var(--gapsy-gutter); top: 6vw; width: 26vw; height: 32vw; }
+    .gapsy-hero__badge { left: auto; right: var(--gapsy-gutter); top: auto; bottom: 4vw; --gapsy-badge-size: 26vw; }
+  }
+  @media (min-width: 768px) and (max-width: 991px) {
+    .gapsy-hero__title { font-size: 11vw; }
+    .gapsy-hero__stage { height: 96vw; }
+    .gapsy-hero__model { width: 64vw; height: 106vw; top: -10vw; }
+    .gapsy-hero__text--top, .gapsy-hero__text--bottom { font-size: 3.2vw; }
+    .gapsy-hero__badge { --gapsy-badge-size: 18vw; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Gapsy · Hero",
+  "tag": "div",
+  "class": "gapsy-section-wrap",
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "heading_prefix", "label": "Italic word before the heading", "default": "the" },
+    { "type": "text", "id": "heading_line_1", "label": "Heading line 1", "default": "The style you" },
+    { "type": "text", "id": "heading_line_2", "label": "Heading line 2", "default": "carry daily" },
+    { "type": "range", "id": "heading_size", "label": "Heading size (px @1440)", "min": 60, "max": 200, "step": 2, "default": 142 },
+    { "type": "range", "id": "prefix_size", "label": "Italic word size (px @1440)", "min": 30, "max": 140, "step": 2, "default": 82 },
+    { "type": "header", "content": "Texts" },
+    { "type": "textarea", "id": "text_top", "label": "Text, top left", "default": "Discover bags that complete your look and fit effortlessly into your everyday life" },
+    { "type": "textarea", "id": "text_bottom", "label": "Text, bottom left", "default": "Premium materials that feel right" },
+    { "type": "color", "id": "text_color", "label": "Text colour on the background", "default": "#ffffff" },
+    { "type": "header", "content": "Images" },
+    { "type": "image_picker", "id": "model_image", "label": "Model (PNG cut-out, transparent background)", "info": "About 1480 × 2220 px." },
+    { "type": "checkbox", "id": "show_left_image", "label": "Show left photo", "default": true },
+    { "type": "image_picker", "id": "left_image", "label": "Left photo" },
+    { "type": "url", "id": "left_image_link", "label": "Left photo link" },
+    { "type": "checkbox", "id": "show_right_image", "label": "Show right photo", "default": true },
+    { "type": "image_picker", "id": "right_image", "label": "Right photo" },
+    { "type": "url", "id": "right_image_link", "label": "Right photo link" },
+    { "type": "header", "content": "Background" },
+    { "type": "color", "id": "gradient_from", "label": "Gradient, left", "default": "#e3262b" },
+    { "type": "color", "id": "gradient_to", "label": "Gradient, right", "default": "#ffb562" },
+    { "type": "image_picker", "id": "background_image", "label": "Background image (instead of gradient)" },
+    { "type": "range", "id": "stripes", "label": "Loader stripes", "min": 4, "max": 12, "step": 1, "default": 8 },
+    { "type": "header", "content": "Badge" },
+    { "type": "text", "id": "badge_text", "label": "Rotating badge text", "default": "choose a bag", "info": "Leave empty to hide the badge." },
+    { "type": "url", "id": "badge_url", "label": "Badge link" },
+    { "type": "range", "id": "badge_speed", "label": "Badge rotation (seconds per turn)", "min": 4, "max": 40, "step": 1, "default": 14 },
+    { "type": "header", "content": "Animation" },
+    { "type": "checkbox", "id": "intro_animation", "label": "Loader + intro animation", "default": true },
+    { "type": "checkbox", "id": "parallax", "label": "Parallax on scroll", "default": true },
+    { "type": "range", "id": "left_speed", "label": "Left photo parallax", "min": -100, "max": 100, "step": 5, "default": 40 },
+    { "type": "range", "id": "right_speed", "label": "Right photo parallax", "min": -100, "max": 100, "step": 5, "default": -30 },
+    { "type": "text", "id": "anchor_id", "label": "Anchor ID", "info": "For menu links like /#home." }
+  ],
+  "presets": [{ "name": "Gapsy · Hero" }]
+}
+{% endschema %}

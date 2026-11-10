@@ -1,0 +1,60 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "gapsy-product",
+      "blocks": {
+        "desc": {
+          "type": "description",
+          "settings": {
+            "title": "Description",
+            "open": true
+          }
+        },
+        "ship": {
+          "type": "accordion",
+          "settings": {
+            "title": "Shipping & returns",
+            "content": "<p>Free shipping on orders over $150. Easy returns within 30 days of delivery.</p>",
+            "open": false
+          }
+        },
+        "care": {
+          "type": "accordion",
+          "settings": {
+            "title": "Care",
+            "content": "<p>Wipe with a soft dry cloth. Keep away from direct sunlight and moisture. Store in the dust bag.</p>",
+            "open": false
+          }
+        }
+      },
+      "block_order": [
+        "desc",
+        "ship",
+        "care"
+      ],
+      "settings": {}
+    },
+    "related": {
+      "type": "gapsy-products",
+      "settings": {
+        "heading": "<em>you may</em> also like",
+        "collection_handle": "best-sellers",
+        "link_label": "View all",
+        "anchor_id": ""
+      }
+    }
+  },
+  "order": [
+    "main",
+    "related"
+  ]
+}

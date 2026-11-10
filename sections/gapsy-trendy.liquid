@@ -1,0 +1,107 @@
+{%- comment -%}
+  Gapsy · Trendy bags — editorial block: "TRENDY / BAGS" + "STYLE" over a gradient square with a model.
+  Wherever the words cross the gradient square they turn into a light gradient. On scroll the square
+  grows to the top-left corner and the whole headline becomes gradient (scrubbed).
+  How: a black text layer + an identical gradient text layer clipped to the same rectangle as the square.
+  Data: two headline lines + indent, the "STYLE" word, 3 notes, model photo, colours.
+  JS: assets/gapsy-trendy.js. Mobile: the composition scales to the screen width, notes move below.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- capture words -%}
+  <span class="gapsy-trendy__title">
+    <span class="gapsy-trendy__line-mask"><span class="gapsy-trendy__line" data-trendy-line="0">{{ s.line_1 }}</span></span>
+    <span class="gapsy-trendy__line-mask gapsy-trendy__line-mask--2"><span class="gapsy-trendy__line" data-trendy-line="1">{{ s.line_2 }}</span></span>
+  </span>
+  <span class="gapsy-trendy__word"><span class="gapsy-trendy__line-mask"><span class="gapsy-trendy__line" data-trendy-line="2">{{ s.word }}</span></span></span>
+{%- endcapture -%}
+<section
+  class="gapsy-section gapsy-trendy"
+  data-gapsy-section="trendy"
+  data-grow="{{ s.grow_on_scroll }}"
+  {% if s.anchor_id != blank %}id="{{ s.anchor_id | handleize }}"{% endif %}
+  style="--sq-from: {{ s.gradient_from }}; --sq-to: {{ s.gradient_to }}; --tx-from: {{ s.text_gradient_from }}; --tx-to: {{ s.text_gradient_to }}; --indent: {{ s.line_2_indent | divided_by: 100.0 }}em; --gapsy-pt: {{ s.padding_top | divided_by: 16.0 }}rem; --gapsy-pb: {{ s.padding_bottom | divided_by: 16.0 }}rem; background: {{ s.background }};"
+>
+  <div class="gapsy-trendy__stage" data-trendy-stage>
+    <div class="gapsy-trendy__square" data-trendy-clip aria-hidden="true">
+      {%- if s.square_image != blank -%}
+        {{ s.square_image | image_url: width: 1800 | image_tag: alt: '', sizes: '(min-width: 992px) 74vw, 100vw', widths: '720, 1080, 1440, 1800' }}
+      {%- endif -%}
+    </div>
+    <div class="gapsy-trendy__model" data-trendy-model>
+      {%- render 'gapsy-image', image: s.model_image, sizes: '(min-width: 992px) 38vw, 40vw' -%}
+    </div>
+    <h2 class="gapsy-trendy__text gapsy-trendy__text--solid">{{ words }}</h2>
+    <div class="gapsy-trendy__text gapsy-trendy__text--grad" data-trendy-clip aria-hidden="true">{{ words }}</div>
+  </div>
+
+  <div class="gapsy-trendy__notes">
+    {%- if s.note_1 != blank -%}<p class="gapsy-trendy__note gapsy-trendy__note--1" data-trendy-note>{{ s.note_1 }}</p>{%- endif -%}
+    {%- if s.note_2 != blank -%}<p class="gapsy-trendy__note gapsy-trendy__note--2" data-trendy-note>{{ s.note_2 }}</p>{%- endif -%}
+    {%- if s.note_3 != blank -%}<p class="gapsy-trendy__note gapsy-trendy__note--3" data-trendy-note>{{ s.note_3 }}</p>{%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  /* Composition is drawn in "em" of the 1440 design: 1em = 16px @1440 (= 1rem on desktop). */
+  .gapsy-trendy { --clip: inset(17.49% 26.74% 6.88% 26.74%); font-size: 1rem; padding-top: var(--gapsy-pt, 0); padding-bottom: var(--gapsy-pb, 0); }
+  .gapsy-trendy__stage { position: relative; height: 55.375em; }
+  .gapsy-trendy [data-trendy-clip] { clip-path: var(--clip); }
+  .gapsy-trendy__square { position: absolute; inset: 0; background: linear-gradient(90deg, var(--sq-from), var(--sq-to)); }
+  .gapsy-trendy__square img { width: 100%; height: 100%; object-fit: cover; }
+  .gapsy-trendy__model { position: absolute; left: 32.6875em; top: 2.75em; width: 33.25em; height: 48.8125em; }
+  .gapsy-trendy__model img, .gapsy-trendy__model svg { width: 100%; height: 100%; object-fit: contain; object-position: bottom; }
+  .gapsy-trendy__model .gapsy-placeholder { background: transparent; }
+  .gapsy-trendy .gapsy-trendy__text { position: absolute; inset: 0; margin: 0; pointer-events: none; font-family: var(--gapsy-font-display); font-weight: 400; font-size: 1em; line-height: normal; letter-spacing: normal; text-transform: uppercase; color: var(--gapsy-black); }
+  .gapsy-trendy__text--grad .gapsy-trendy__line { background: linear-gradient(180deg, var(--tx-from), var(--tx-to)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .gapsy-trendy__title { position: absolute; left: 0.8654em; top: 0.3846em; font-size: 9.75em; line-height: 0.93; white-space: nowrap; }
+  .gapsy-trendy__line-mask { display: block; overflow: clip; padding-top: 0.06em; margin-top: -0.06em; }
+  .gapsy-trendy__line-mask--2 { padding-left: var(--indent, 1.19em); }
+  .gapsy-trendy__line { display: inline-block; }
+  .gapsy-trendy__word { position: absolute; left: 6.36em; top: 4.646em; font-size: 9em; line-height: 1.2; letter-spacing: -0.02em; white-space: nowrap; }
+  .gapsy-trendy__notes { position: absolute; inset: var(--gapsy-pt, 0) 0 auto 0; height: 55.375em; pointer-events: none; }
+  .gapsy-trendy__note { position: absolute; width: 13.5em; font-family: var(--gapsy-font-condensed); font-size: 1.625em; line-height: 1.2; text-transform: uppercase; color: rgba(52, 58, 63, 0.9); }
+  .gapsy-trendy__note--1 { right: 2.5rem; top: 3.46em; text-align: right; width: 8em; }
+  .gapsy-trendy__note--2 { left: 43.06em; top: 16.96em; text-align: center; width: 8.35em; }
+  .gapsy-trendy__note--3 { left: 1.54em; top: 28.54em; width: 8.1em; }
+  @media (max-width: 991px) {
+    .gapsy-trendy { font-size: calc(100vw / 84); }
+    .gapsy-trendy__stage { margin-left: -4em; }
+    .gapsy-trendy__notes { position: static; height: auto; display: grid; gap: 1rem; padding: 2rem var(--gapsy-gutter) 2.5rem; font-size: 1rem; }
+    .gapsy-trendy__note, .gapsy-trendy__note--1, .gapsy-trendy__note--2, .gapsy-trendy__note--3 { position: static; width: auto; max-width: 15rem; font-size: 1.375rem; text-align: left; }
+    .gapsy-trendy__note--2 { justify-self: end; text-align: right; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Gapsy · Trendy bags",
+  "tag": "div",
+  "class": "gapsy-section-wrap",
+  "settings": [
+    { "type": "header", "content": "Words" },
+    { "type": "text", "id": "line_1", "label": "Line 1", "default": "Trendy" },
+    { "type": "text", "id": "line_2", "label": "Line 2", "default": "Bags" },
+    { "type": "range", "id": "line_2_indent", "label": "Line 2 indent (% of letter height)", "min": 0, "max": 300, "step": 5, "default": 120 },
+    { "type": "text", "id": "word", "label": "Bottom right word", "default": "Style" },
+    { "type": "header", "content": "Notes" },
+    { "type": "text", "id": "note_1", "label": "Note, top right", "default": "Choose the style that matches your vibe" },
+    { "type": "text", "id": "note_2", "label": "Note, right", "default": "A perfect bag can change your whole look" },
+    { "type": "text", "id": "note_3", "label": "Note, bottom left", "default": "Make your look stand out with the right bag" },
+    { "type": "header", "content": "Images" },
+    { "type": "image_picker", "id": "model_image", "label": "Model (PNG cut-out, transparent background)" },
+    { "type": "image_picker", "id": "square_image", "label": "Square image (instead of gradient)" },
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "gradient_from", "label": "Square gradient, left", "default": "#e3262b" },
+    { "type": "color", "id": "gradient_to", "label": "Square gradient, right", "default": "#ffb562" },
+    { "type": "color", "id": "text_gradient_from", "label": "Text on square, top", "default": "#ffdd89" },
+    { "type": "color", "id": "text_gradient_to", "label": "Text on square, bottom", "default": "#ff7368" },
+    { "type": "color", "id": "background", "label": "Background", "default": "#ffffff" },
+    { "type": "header", "content": "Section" },
+    { "type": "checkbox", "id": "grow_on_scroll", "label": "Grow the square on scroll", "default": true },
+    { "type": "range", "id": "padding_top", "label": "Top padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 0 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 0 },
+    { "type": "text", "id": "anchor_id", "label": "Anchor ID" }
+  ],
+  "presets": [{ "name": "Gapsy · Trendy bags" }]
+}
+{% endschema %}

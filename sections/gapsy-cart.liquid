@@ -1,0 +1,142 @@
+{%- comment -%}
+  Gapsy · Cart page (templates/cart.json).
+  A normal Shopify cart form: quantity steppers (auto-submit after a short pause), remove links,
+  order note, subtotal, checkout button. Empty state with a link to the shop.
+  JS: assets/gapsy-pages.js ('cart'). Works without JS (Update button).
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<section
+  class="gapsy-section gapsy-cart gapsy-pad"
+  data-gapsy-section="cart"
+  style="--gapsy-pt: {{ s.padding_top | divided_by: 16.0 }}rem; --gapsy-pb: {{ s.padding_bottom | divided_by: 16.0 }}rem; --media-bg: {{ s.media_background }};"
+>
+  <div class="gapsy-container">
+    {%- render 'gapsy-heading', text: s.heading, size: s.heading_size, em_size: s.em_size, size_mobile: s.heading_size_mobile, tag: 'h1' -%}
+
+    {%- if cart.item_count > 0 -%}
+      <form action="{{ routes.cart_url }}" method="post" class="gapsy-cart__grid" data-cart-form novalidate>
+        <ul class="gapsy-cart__items" role="list">
+          {%- for item in cart.items -%}
+            <li class="gapsy-cart__item" data-cart-fade>
+              <a href="{{ item.url }}" class="gapsy-cart__media">
+                {%- if item.image -%}
+                  {{ item.image | image_url: width: 400 | image_tag: alt: item.product.title, loading: 'lazy' }}
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'gapsy-placeholder' }}
+                {%- endif -%}
+              </a>
+              <div class="gapsy-cart__details">
+                <a href="{{ item.url }}" class="gapsy-cart__title">{{ item.product.title }}</a>
+                {%- unless item.product.has_only_default_variant -%}
+                  <p class="gapsy-cart__variant">{{ item.variant.title }}</p>
+                {%- endunless -%}
+                {%- for prop in item.properties -%}
+                  {%- unless prop.last == blank or prop.first contains '_' -%}<p class="gapsy-cart__variant">{{ prop.first }}: {{ prop.last }}</p>{%- endunless -%}
+                {%- endfor -%}
+                <p class="gapsy-cart__unit">{{ item.final_price | money }}</p>
+                <div class="gapsy-cart__row">
+                  <div class="gapsy-qty" data-qty>
+                    <button type="button" class="gapsy-qty__btn" data-qty-minus aria-label="Decrease quantity of {{ item.product.title | escape }}">−</button>
+                    <input class="gapsy-qty__input" type="number" name="updates[]" value="{{ item.quantity }}" min="0" inputmode="numeric" aria-label="Quantity of {{ item.product.title | escape }}" data-qty-input>
+                    <button type="button" class="gapsy-qty__btn" data-qty-plus aria-label="Increase quantity of {{ item.product.title | escape }}">+</button>
+                  </div>
+                  <a href="{{ item.url_to_remove }}" class="gapsy-cart__remove">{{ s.remove_label }}</a>
+                </div>
+              </div>
+              <p class="gapsy-cart__line">{{ item.final_line_price | money }}</p>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        <aside class="gapsy-cart__summary" data-cart-fade>
+          <div class="gapsy-cart__total">
+            <span>{{ s.subtotal_label }}</span>
+            <strong>{{ cart.total_price | money_with_currency }}</strong>
+          </div>
+          {%- if cart.cart_level_discount_applications.size > 0 -%}
+            {%- for discount in cart.cart_level_discount_applications -%}
+              <p class="gapsy-cart__discount">{{ discount.title }}: −{{ discount.total_allocated_amount | money }}</p>
+            {%- endfor -%}
+          {%- endif -%}
+          <p class="gapsy-cart__note-text">{{ s.taxes_text }}</p>
+          {%- if s.show_note -%}
+            <label class="gapsy-cart__note">
+              <span>{{ s.note_label }}</span>
+              <textarea name="note" rows="3">{{ cart.note }}</textarea>
+            </label>
+          {%- endif -%}
+          <button type="submit" name="checkout" class="gapsy-btn gapsy-btn--block">
+            <span>{{ s.checkout_label }}</span>
+            {%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-btn__icon' -%}
+          </button>
+          <noscript><button type="submit" name="update" class="gapsy-cart__update">Update cart</button></noscript>
+          <a href="{{ s.continue_url | default: routes.all_products_collection_url }}" class="gapsy-link gapsy-cart__continue"><span class="gapsy-link__label">{{ s.continue_label }}</span>{%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-link__icon' -%}</a>
+        </aside>
+      </form>
+    {%- else -%}
+      <div class="gapsy-cart__empty" data-cart-fade>
+        <p>{{ s.empty_text }}</p>
+        <a href="{{ s.continue_url | default: routes.all_products_collection_url }}" class="gapsy-btn"><span>{{ s.continue_label }}</span>{%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-btn__icon' -%}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .gapsy-cart__grid { display: grid; grid-template-columns: minmax(0, 1fr) 27rem; gap: 4rem; align-items: start; margin-top: 2rem; }
+  .gapsy-cart__item { display: grid; grid-template-columns: 9rem minmax(0, 1fr) auto; gap: 1.5rem; padding: 1.5rem 0; border-top: 1px solid rgba(0, 0, 0, 0.12); }
+  .gapsy-cart__item:last-child { border-bottom: 1px solid rgba(0, 0, 0, 0.12); }
+  .gapsy-cart__media { display: block; height: 11rem; background: var(--media-bg, #ebebeb); }
+  .gapsy-cart__media img, .gapsy-cart__media svg { width: 100%; height: 100%; object-fit: contain; padding: 0.75rem; }
+  .gapsy-cart__details { display: flex; flex-direction: column; gap: 0.25rem; }
+  .gapsy-cart__title { font-family: var(--gapsy-font-condensed); font-weight: 600; font-size: 2rem; line-height: 1.1; text-transform: uppercase; }
+  .gapsy-cart__title:hover { color: var(--gapsy-primary); }
+  .gapsy-cart__variant, .gapsy-cart__unit { font-size: 0.9375rem; color: var(--gapsy-grey-80); }
+  .gapsy-cart__row { display: flex; align-items: center; gap: 1.25rem; margin-top: auto; padding-top: 0.75rem; }
+  .gapsy-cart__remove { font-size: 0.9375rem; text-decoration: underline; color: var(--gapsy-grey-80); }
+  .gapsy-cart__remove:hover { color: var(--gapsy-primary); }
+  .gapsy-cart__line { font-family: var(--gapsy-font-condensed); font-weight: 700; font-size: 2rem; line-height: 1.1; }
+  .gapsy-cart__summary { position: sticky; top: 2rem; display: flex; flex-direction: column; gap: 1.25rem; padding: 2rem; background: var(--media-bg, #ebebeb); }
+  .gapsy-cart__total { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; font-family: var(--gapsy-font-condensed); font-size: 1.75rem; text-transform: uppercase; }
+  .gapsy-cart__total strong { font-weight: 700; font-size: 2.25rem; }
+  .gapsy-cart__note-text, .gapsy-cart__discount { font-size: 0.9375rem; color: var(--gapsy-grey-80); }
+  .gapsy-cart__note { display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9375rem; }
+  .gapsy-section .gapsy-cart__note textarea { width: 100%; padding: 0.75rem 1rem; border: 1px solid rgba(0, 0, 0, 0.2); border-radius: 1rem; background: var(--gapsy-white); box-shadow: none; font: 400 1rem/1.4 var(--gapsy-font-sans); resize: vertical; }
+  .gapsy-cart__continue { --gapsy-link-size: 1.75rem; align-self: center; }
+  .gapsy-cart__empty { display: flex; flex-direction: column; align-items: flex-start; gap: 2rem; padding: 2rem 0 4rem; font-size: 1.25rem; color: var(--gapsy-grey-80); }
+  @media (max-width: 991px) {
+    .gapsy-cart__grid { grid-template-columns: 1fr; gap: 2rem; }
+    .gapsy-cart__item { grid-template-columns: 6.5rem minmax(0, 1fr); }
+    .gapsy-cart__media { height: 8rem; }
+    .gapsy-cart__line { grid-column: 2; font-size: 1.5rem; }
+    .gapsy-cart__title { font-size: 1.5rem; }
+    .gapsy-cart__summary { position: static; padding: 1.5rem; }
+    .gapsy-cart__continue { --gapsy-link-size-m: 1.5rem; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Gapsy · Cart",
+  "tag": "div",
+  "class": "gapsy-section-wrap",
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "<em>your</em> Cart" },
+    { "type": "range", "id": "heading_size", "label": "Heading size (px @1440)", "min": 40, "max": 200, "step": 2, "default": 110 },
+    { "type": "range", "id": "em_size", "label": "Italic words size (px @1440)", "min": 20, "max": 140, "step": 2, "default": 64 },
+    { "type": "range", "id": "heading_size_mobile", "label": "Heading size, mobile (px)", "min": 28, "max": 100, "step": 2, "default": 52 },
+    { "type": "text", "id": "subtotal_label", "label": "Subtotal label", "default": "Subtotal" },
+    { "type": "text", "id": "taxes_text", "label": "Taxes note", "default": "Taxes and shipping calculated at checkout." },
+    { "type": "checkbox", "id": "show_note", "label": "Show order note", "default": true },
+    { "type": "text", "id": "note_label", "label": "Order note label", "default": "Add a note to your order" },
+    { "type": "text", "id": "checkout_label", "label": "Checkout label", "default": "Checkout" },
+    { "type": "text", "id": "remove_label", "label": "Remove label", "default": "Remove" },
+    { "type": "text", "id": "continue_label", "label": "Continue shopping label", "default": "Continue shopping" },
+    { "type": "url", "id": "continue_url", "label": "Continue shopping link", "info": "Empty = all products." },
+    { "type": "text", "id": "empty_text", "label": "Empty cart text", "default": "Your cart is empty — find a bag you love." },
+    { "type": "color", "id": "media_background", "label": "Photo & summary background", "default": "#ebebeb" },
+    { "type": "range", "id": "padding_top", "label": "Top padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 100 }
+  ]
+}
+{% endschema %}

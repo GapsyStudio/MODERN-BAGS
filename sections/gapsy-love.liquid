@@ -1,0 +1,109 @@
+{%- comment -%}
+  Gapsy · Designed with love — dark band with a big line of words and small photos between them.
+  Data: blocks "Word" and "Photo" (any order, so the line can be rebuilt in the editor), text, link.
+  JS: assets/gapsy-love.js — while the band scrolls in, the photos open from 0 width and push the
+  words apart (scrubbed), the words rise, then the text and link fade in.
+  Mobile: smaller words, the line can wrap. Reduced motion: photos are open from the start.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<section
+  class="gapsy-section gapsy-love gapsy-pad"
+  data-gapsy-section="love"
+  data-open="{{ s.open_on_scroll }}"
+  {% if s.anchor_id != blank %}id="{{ s.anchor_id | handleize }}"{% endif %}
+  style="--gapsy-pt: {{ s.padding_top | divided_by: 16.0 }}rem; --gapsy-pb: {{ s.padding_bottom | divided_by: 16.0 }}rem; --love-size: {{ s.word_size | divided_by: 16.0 }}rem; --love-size-m: {{ s.word_size_mobile | divided_by: 16.0 }}rem; background: {{ s.background }}; color: {{ s.text_color }};"
+>
+  <div class="gapsy-container gapsy-love__inner">
+    <h2 class="gapsy-love__line" data-love-line>
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'word' -%}
+            <span class="gapsy-love__word" {{ block.shopify_attributes }}><span class="gapsy-love__word-in" data-love-word>{{ block.settings.text }}</span></span>
+          {%- when 'photo' -%}
+            <span class="gapsy-love__photo" style="--w: {{ block.settings.width | divided_by: 16.0 }}rem; --h: {{ block.settings.height | divided_by: 16.0 }}rem;" data-love-photo {{ block.shopify_attributes }}>
+              <span class="gapsy-love__photo-in" data-love-photo-in>
+                {%- render 'gapsy-image', image: block.settings.image, sizes: '(min-width: 992px) 10vw, 20vw', alt: '' -%}
+              </span>
+            </span>
+        {%- endcase -%}
+      {%- endfor -%}
+    </h2>
+
+    {%- if s.text != blank -%}
+      <div class="gapsy-love__text" data-love-fade>{{ s.text }}</div>
+    {%- endif -%}
+    {%- if s.link_label != blank -%}
+      <a href="{{ s.link_url | default: routes.all_products_collection_url }}" class="gapsy-link gapsy-love__link" data-love-fade>
+        <span class="gapsy-link__label">{{ s.link_label }}</span>
+        {%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-link__icon' -%}
+      </a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .gapsy-love__inner { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .gapsy-love__line { display: flex; flex-wrap: nowrap; align-items: center; justify-content: center; margin: 0; font-family: var(--gapsy-font-display); font-weight: 400; font-size: var(--love-size); line-height: 1.5; letter-spacing: 0.01em; text-transform: uppercase; white-space: nowrap; }
+  .gapsy-love__word { display: inline-block; overflow: clip; padding-inline: 0.625rem; }
+  .gapsy-love__word-in { display: inline-block; }
+  .gapsy-love__photo { position: relative; display: inline-block; width: var(--w); height: var(--h); flex: none; overflow: hidden; margin-inline: 0.625rem; }
+  .gapsy-love__photo-in { position: absolute; top: 0; bottom: 0; left: 50%; width: var(--w); transform: translateX(-50%); }
+  .gapsy-love__photo-in img, .gapsy-love__photo-in svg { width: 100%; height: 100%; object-fit: cover; }
+  .gapsy-love__text { max-width: 41.875rem; margin-top: 1rem; font-size: 1.1875rem; line-height: 1.55; opacity: 0.8; }
+  .gapsy-love__text p { margin: 0; }
+  .gapsy-love__link { --gapsy-link-color: currentColor; --gapsy-link-size: 2.8rem; margin-top: 2.5rem; }
+  @media (max-width: 991px) {
+    .gapsy-love__line { font-size: var(--love-size-m); flex-wrap: wrap; row-gap: 0.25rem; line-height: 1.2; }
+    .gapsy-love__word { padding-inline: 0.3rem; }
+    .gapsy-love__photo { width: calc(var(--w) * 0.5); height: calc(var(--h) * 0.5); margin-inline: 0.3rem; }
+    .gapsy-love__photo-in { width: calc(var(--w) * 0.5); }
+    .gapsy-love__text { font-size: 1rem; }
+    .gapsy-love__link { --gapsy-link-size-m: 2rem; margin-top: 1.75rem; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Gapsy · Love",
+  "tag": "div",
+  "class": "gapsy-section-wrap",
+  "settings": [
+    { "type": "range", "id": "word_size", "label": "Words size (px @1440)", "min": 40, "max": 200, "step": 2, "default": 110 },
+    { "type": "range", "id": "word_size_mobile", "label": "Words size, mobile (px)", "min": 24, "max": 100, "step": 2, "default": 48 },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Crafted with love and attention to detail, each bag is made from high-quality materials to ensure both style and durability, designed to complement your everyday life while staying timeless and reliable.</p>" },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "Choose a bag" },
+    { "type": "url", "id": "link_url", "label": "Link", "info": "Empty = all products." },
+    { "type": "color", "id": "background", "label": "Background", "default": "#000000" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#ffffff" },
+    { "type": "range", "id": "padding_top", "label": "Top padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 48 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 48 },
+    { "type": "checkbox", "id": "open_on_scroll", "label": "Open photos while scrolling", "default": true },
+    { "type": "text", "id": "anchor_id", "label": "Anchor ID" }
+  ],
+  "blocks": [
+    { "type": "word", "name": "Word", "settings": [{ "type": "text", "id": "text", "label": "Word", "default": "with" }] },
+    {
+      "type": "photo",
+      "name": "Photo",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        { "type": "range", "id": "width", "label": "Width (px @1440)", "min": 40, "max": 240, "step": 2, "default": 100 },
+        { "type": "range", "id": "height", "label": "Height (px @1440)", "min": 40, "max": 240, "step": 2, "default": 108 }
+      ]
+    }
+  ],
+  "max_blocks": 9,
+  "presets": [
+    {
+      "name": "Gapsy · Love",
+      "blocks": [
+        { "type": "word", "settings": { "text": "designed" } },
+        { "type": "photo", "settings": { "width": 100, "height": 108 } },
+        { "type": "word", "settings": { "text": "with" } },
+        { "type": "photo", "settings": { "width": 100, "height": 108 } },
+        { "type": "word", "settings": { "text": "Love" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,168 @@
+{%- comment -%}
+  Gapsy · Header (replaces Horizon's header in the Header group).
+  Data: logo (image or store name text), menu (Navigation → handle from "menu_handle", default main-menu),
+  optional "Cart (n)" item, CTA link with arrow, round avatar linking to the customer account.
+  JS: assets/gapsy-header.js — intro fade-in after the preloader, mobile menu, hide-on-scroll (optional).
+  Mobile (<992px): logo + cart + burger, full-screen menu.
+{%- endcomment -%}
+{%- liquid
+  assign menu = section.settings.menu
+  if menu == blank and section.settings.menu_handle != blank
+    assign menu = linklists[section.settings.menu_handle]
+  endif
+  assign logo_text = section.settings.logo_text | default: shop.name
+-%}
+<div
+  class="gapsy-header{% if section.settings.sticky %} gapsy-header--sticky{% endif %}"
+  data-gapsy-section="header"
+  data-sticky="{{ section.settings.sticky }}"
+  style="--gh-logo: {{ section.settings.logo_size | divided_by: 16.0 }}rem; --gh-logo-img: {{ section.settings.logo_width | divided_by: 16.0 }}rem; --gh-nav: {{ section.settings.nav_size | divided_by: 16.0 }}rem; --gh-cta: {{ section.settings.cta_size | divided_by: 16.0 }}rem; --gh-bg: {{ section.settings.background }}; --gh-color: {{ section.settings.text_color }}; --gapsy-pt: {{ section.settings.padding_top | divided_by: 16.0 }}rem;"
+>
+  <div class="gapsy-header__bar gapsy-container{% if section.settings.intro_animation %} gapsy-pre{% endif %}" data-header-bar>
+    <a href="{{ routes.root_url }}" class="gapsy-header__logo" data-header-item>
+      {%- if section.settings.logo != blank -%}
+        {{ section.settings.logo | image_url: width: 600 | image_tag: class: 'gapsy-header__logo-img', alt: shop.name, loading: 'eager' }}
+      {%- else -%}
+        {{ logo_text }}
+      {%- endif -%}
+    </a>
+
+    <nav class="gapsy-header__nav" aria-label="Main">
+      <ul class="gapsy-header__list">
+        {%- for link in menu.links -%}
+          <li data-header-item>
+            <a href="{{ link.url }}" class="gapsy-header__link{% if link.active %} is-active{% endif %}"{% if link.active %} aria-current="page"{% endif %}>{{ link.title }}</a>
+          </li>
+        {%- endfor -%}
+        {%- if section.settings.show_cart -%}
+          <li data-header-item>
+            <a href="{{ routes.cart_url }}" class="gapsy-header__link">{{ section.settings.cart_label }} (<span data-cart-count>{{ cart.item_count }}</span>)</a>
+          </li>
+        {%- endif -%}
+      </ul>
+    </nav>
+
+    <div class="gapsy-header__actions">
+      {%- if section.settings.cta_label != blank -%}
+        <a href="{{ section.settings.cta_url | default: routes.all_products_collection_url }}" class="gapsy-link gapsy-header__cta" data-header-item>
+          <span class="gapsy-link__label">{{ section.settings.cta_label }}</span>
+          {%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-link__icon' -%}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.show_avatar -%}
+        <a href="{{ routes.account_url }}" class="gapsy-header__avatar" aria-label="{{ section.settings.avatar_label | escape }}" data-header-item>
+          {%- if section.settings.avatar != blank -%}
+            {{ section.settings.avatar | image_url: width: 160 | image_tag: alt: '', loading: 'eager' }}
+          {%- else -%}
+            <span class="gapsy-header__avatar-fallback" aria-hidden="true"></span>
+          {%- endif -%}
+        </a>
+      {%- endif -%}
+      <a href="{{ routes.cart_url }}" class="gapsy-header__m-cart" aria-label="{{ section.settings.cart_label | escape }}">
+        {%- render 'gapsy-icon', icon: 'cart', class: 'gapsy-header__m-icon' -%}
+        <span data-cart-count>{{ cart.item_count }}</span>
+      </a>
+      <button type="button" class="gapsy-header__burger" aria-expanded="false" aria-controls="GapsyMenu-{{ section.id }}" data-menu-toggle>
+        <span class="gapsy-visually-hidden">Menu</span>
+        {%- render 'gapsy-icon', icon: 'menu', class: 'gapsy-header__m-icon gapsy-header__icon-open' -%}
+        {%- render 'gapsy-icon', icon: 'close', class: 'gapsy-header__m-icon gapsy-header__icon-close' -%}
+      </button>
+    </div>
+  </div>
+
+  <div class="gapsy-header__menu" id="GapsyMenu-{{ section.id }}" data-menu hidden>
+    <ul class="gapsy-header__menu-list">
+      {%- for link in menu.links -%}
+        <li><a href="{{ link.url }}" class="gapsy-header__menu-link" data-menu-link>{{ link.title }}</a></li>
+      {%- endfor -%}
+      {%- if section.settings.show_cart -%}
+        <li><a href="{{ routes.cart_url }}" class="gapsy-header__menu-link" data-menu-link>{{ section.settings.cart_label }} (<span data-cart-count>{{ cart.item_count }}</span>)</a></li>
+      {%- endif -%}
+    </ul>
+    {%- if section.settings.cta_label != blank -%}
+      <a href="{{ section.settings.cta_url | default: routes.all_products_collection_url }}" class="gapsy-link gapsy-header__menu-cta" data-menu-link>
+        <span class="gapsy-link__label">{{ section.settings.cta_label }}</span>
+        {%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-link__icon' -%}
+      </a>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .gapsy-header { position: relative; z-index: 50; padding-top: var(--gapsy-pt, 2rem); background: var(--gh-bg, #fff); color: var(--gh-color, #000); font-family: var(--gapsy-font-sans); }
+  .gapsy-header *, .gapsy-header *::before, .gapsy-header *::after { box-sizing: border-box; }
+  .gapsy-header a { color: inherit; text-decoration: none; }
+  .gapsy-header ul { list-style: none; margin: 0; padding: 0; }
+  #header-group:has(.gapsy-header--sticky) { position: sticky; top: 0; z-index: 50; }
+  .gapsy-header--sticky { padding-bottom: 0.75rem; transition: transform 0.5s var(--gapsy-ease); }
+  .gapsy-header--sticky.is-hidden { transform: translateY(-100%); }
+  .gapsy-header__bar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; min-height: 3rem; }
+  .gapsy-header__logo { justify-self: start; font-family: var(--gapsy-font-display); font-size: var(--gh-logo); line-height: 1; text-transform: uppercase; white-space: nowrap; }
+  .gapsy-header__logo-img { width: var(--gh-logo-img); height: auto; display: block; }
+  .gapsy-header__list { display: flex; align-items: center; gap: 2rem; }
+  .gapsy-header__link { position: relative; font-size: var(--gh-nav); font-weight: 500; line-height: 1; text-transform: uppercase; color: var(--gapsy-grey-100); }
+  .gapsy-header__link::after { content: ''; position: absolute; left: 0; right: 0; bottom: -0.3em; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform 0.5s var(--gapsy-ease); }
+  .gapsy-header__link.is-active::after { transform: scaleX(1); }
+  @media (hover: hover) { .gapsy-header__link:hover::after { transform: scaleX(1); transform-origin: left; } }
+  .gapsy-header__actions { justify-self: end; display: flex; align-items: center; gap: 1rem; }
+  .gapsy-header__cta { --gapsy-link-size: var(--gh-cta); gap: 0.35rem; }
+  .gapsy-header__avatar { display: block; width: 3rem; height: 3rem; border-radius: 50%; border: 1px solid var(--gapsy-text-grad-to); overflow: hidden; flex: none; }
+  .gapsy-header__avatar img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+  .gapsy-header__avatar-fallback { display: block; width: 100%; height: 100%; background: var(--gapsy-text-gradient); }
+  .gapsy-header__m-cart, .gapsy-header__burger { display: none; }
+  .gapsy-header__menu[hidden] { display: none; }
+
+  @media (max-width: 991px) {
+    .gapsy-header { padding-top: 1rem; padding-bottom: 0.5rem; }
+    .gapsy-header__bar { grid-template-columns: 1fr auto; }
+    .gapsy-header__nav, .gapsy-header__cta, .gapsy-header__avatar { display: none; }
+    .gapsy-header__logo { font-size: 1.375rem; position: relative; z-index: 2; }
+    .gapsy-header__actions { position: relative; z-index: 2; gap: 0.5rem; }
+    .gapsy-header__m-cart { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.875rem; font-weight: 500; padding: 0.5rem; }
+    .gapsy-header__burger { display: inline-flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; }
+    .gapsy-header__m-icon { width: 1.5rem; height: 1.5rem; }
+    .gapsy-header__icon-close { display: none; }
+    .gapsy-header.is-open .gapsy-header__icon-open { display: none; }
+    .gapsy-header.is-open .gapsy-header__icon-close { display: block; }
+    .gapsy-header__menu { position: fixed; inset: 0; z-index: 1; display: flex; flex-direction: column; justify-content: space-between; padding: calc(var(--gapsy-header-h) + 1.5rem) var(--gapsy-gutter) 2rem; background: var(--gh-bg, #fff); }
+    .gapsy-header__menu-list { display: flex; flex-direction: column; gap: 0.25rem; }
+    .gapsy-header__menu-link { display: inline-block; font-family: var(--gapsy-font-display); font-size: 3rem; line-height: 1.15; text-transform: uppercase; }
+    .gapsy-header__menu-cta { --gapsy-link-size-m: 2.5rem; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Gapsy · Header",
+  "tag": "header",
+  "class": "gapsy-header-section",
+  "enabled_on": { "groups": ["header"] },
+  "settings": [
+    { "type": "header", "content": "Logo" },
+    { "type": "image_picker", "id": "logo", "label": "Logo image", "info": "Leave empty to show the text below in Anton." },
+    { "type": "text", "id": "logo_text", "label": "Logo text", "default": "MODERN BAGS", "info": "Empty = store name." },
+    { "type": "range", "id": "logo_size", "label": "Logo text size (px @1440)", "min": 14, "max": 48, "step": 1, "default": 24 },
+    { "type": "range", "id": "logo_width", "label": "Logo image width (px @1440)", "min": 60, "max": 300, "step": 5, "default": 135 },
+    { "type": "header", "content": "Menu" },
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" },
+    { "type": "text", "id": "menu_handle", "label": "Menu handle (fallback)", "default": "main-menu", "info": "Used if the menu above is empty. Find the handle in Content → Menus." },
+    { "type": "range", "id": "nav_size", "label": "Menu text size (px @1440)", "min": 12, "max": 24, "step": 1, "default": 18 },
+    { "type": "checkbox", "id": "show_cart", "label": "Show \"Cart (n)\" in menu", "default": true },
+    { "type": "text", "id": "cart_label", "label": "Cart label", "default": "Cart" },
+    { "type": "header", "content": "Call to action" },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Start shopping" },
+    { "type": "url", "id": "cta_url", "label": "Button link", "info": "Empty = all products." },
+    { "type": "range", "id": "cta_size", "label": "Button text size (px @1440)", "min": 16, "max": 48, "step": 1, "default": 34 },
+    { "type": "checkbox", "id": "show_avatar", "label": "Show account avatar", "default": true },
+    { "type": "image_picker", "id": "avatar", "label": "Avatar image" },
+    { "type": "text", "id": "avatar_label", "label": "Avatar accessible label", "default": "My account" },
+    { "type": "header", "content": "Layout & colors" },
+    { "type": "color", "id": "background", "label": "Background", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#000000" },
+    { "type": "range", "id": "padding_top", "label": "Top padding (px @1440)", "min": 0, "max": 80, "step": 2, "default": 32 },
+    { "type": "checkbox", "id": "sticky", "label": "Sticky header", "info": "Hides when scrolling down, shows when scrolling up.", "default": false },
+    { "type": "header", "content": "Animation" },
+    { "type": "checkbox", "id": "intro_animation", "label": "Fade in on page load", "default": true }
+  ]
+}
+{% endschema %}

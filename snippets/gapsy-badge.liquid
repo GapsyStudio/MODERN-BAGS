@@ -1,0 +1,20 @@
+{%- comment -%}
+  Rotating circular text badge ("choose a bag · choose a bag ·").
+  Params: text (string), url (optional), class (optional), id (unique suffix for the SVG path)
+  The text repeats until it fills the circle. Rotation speed: CSS var --gapsy-badge-speed.
+{%- endcomment -%}
+{%- liquid
+  assign badge_text = text | default: 'choose a bag' | strip | upcase
+  assign path_id = 'gapsy-badge-path-' | append: id
+  assign tag = 'span'
+  if url != blank
+    assign tag = 'a'
+  endif
+-%}
+<{{ tag }} class="gapsy-badge {{ class }}"{% if url != blank %} href="{{ url }}"{% endif %} aria-label="{{ text | escape }}">
+  <svg class="gapsy-badge__ring" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+    <defs><path id="{{ path_id }}" d="M100,100 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0"/></defs>
+    <text><textPath href="#{{ path_id }}" textLength="512" lengthAdjust="spacing">{{ badge_text }} {{ badge_text }} {{ badge_text }}&nbsp;</textPath></text>
+  </svg>
+  {%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-badge__icon', stroke: 1.4 -%}
+</{{ tag }}>

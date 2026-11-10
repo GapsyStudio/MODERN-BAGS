@@ -1,0 +1,157 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "gapsy-hero",
+      "settings": {}
+    },
+    "about": {
+      "type": "gapsy-about",
+      "blocks": {
+        "f1": {
+          "type": "feature",
+          "settings": {
+            "title": "Timeless style",
+            "text": "timeless designs for effortless everyday elegance",
+            "image_position": "below",
+            "image_width": 162,
+            "image_height": 210,
+            "offset": 36,
+            "parallax": 30
+          }
+        },
+        "f2": {
+          "type": "feature",
+          "settings": {
+            "title": "Quality materials",
+            "text": "premium materials for durability and beauty",
+            "image_position": "above",
+            "image_width": 164,
+            "image_height": 246,
+            "offset": 0,
+            "parallax": -40
+          }
+        },
+        "f3": {
+          "type": "feature",
+          "settings": {
+            "title": "Smart function",
+            "text": "designed for daily essentials and easy carrying",
+            "image_position": "below",
+            "image_width": 140,
+            "image_height": 210,
+            "offset": 36,
+            "parallax": 50
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3"
+      ],
+      "settings": {}
+    },
+    "categories": {
+      "type": "gapsy-categories",
+      "blocks": {
+        "c1": {
+          "type": "category",
+          "settings": {
+            "collection_handle": "everyday-bags",
+            "title": "Everyday bags"
+          }
+        },
+        "c2": {
+          "type": "category",
+          "settings": {
+            "collection_handle": "statement-bags",
+            "title": "Statement bags"
+          }
+        },
+        "c3": {
+          "type": "category",
+          "settings": {
+            "collection_handle": "mini-bags",
+            "title": "Mini bags"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3"
+      ],
+      "settings": {}
+    },
+    "love": {
+      "type": "gapsy-love",
+      "blocks": {
+        "w1": {
+          "type": "word",
+          "settings": {
+            "text": "designed"
+          }
+        },
+        "p1": {
+          "type": "photo",
+          "settings": {
+            "width": 100,
+            "height": 108
+          }
+        },
+        "w2": {
+          "type": "word",
+          "settings": {
+            "text": "with"
+          }
+        },
+        "p2": {
+          "type": "photo",
+          "settings": {
+            "width": 100,
+            "height": 108
+          }
+        },
+        "w3": {
+          "type": "word",
+          "settings": {
+            "text": "Love"
+          }
+        }
+      },
+      "block_order": [
+        "w1",
+        "p1",
+        "w2",
+        "p2",
+        "w3"
+      ],
+      "settings": {}
+    },
+    "products": {
+      "type": "gapsy-products",
+      "settings": {}
+    },
+    "trendy": {
+      "type": "gapsy-trendy",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "about",
+    "categories",
+    "love",
+    "products",
+    "trendy"
+  ]
+}

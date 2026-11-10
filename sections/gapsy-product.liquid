@@ -1,0 +1,253 @@
+{%- comment -%}
+  Gapsy · Product page (templates/product.json).
+  Layout: desktop — photos stacked on the left (grey surface), sticky info on the right;
+  mobile — swipe gallery with a counter, info below.
+  Info: breadcrumbs, vendor/label, title, price, option pickers (the colour option shows round
+  swatches with variant photos), quantity, add to cart, then blocks: accordions (product
+  description or your own text). Works without JS (normal form); with JS the variant updates
+  price/photo/URL and adds to cart via AJAX (assets/gapsy-pages.js).
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign current = product.selected_or_first_available_variant
+  assign color_name = s.color_option | default: 'Color' | downcase | replace: 'colour', 'color'
+  assign first_col = product.collections | where: 'handle', s.crumb_collection | first
+  if first_col == blank
+    assign first_col = collection | default: product.collections.first
+  endif
+-%}
+<section
+  class="gapsy-section gapsy-product"
+  data-gapsy-section="product"
+  data-product-section
+  style="--gapsy-pt: {{ s.padding_top | divided_by: 16.0 }}rem; --gapsy-pb: {{ s.padding_bottom | divided_by: 16.0 }}rem; --media-bg: {{ s.media_background }};"
+>
+  <div class="gapsy-container gapsy-product__grid gapsy-pad">
+    <div class="gapsy-product__media" data-product-media>
+      <div class="gapsy-product__track" data-product-track>
+        {%- for media in product.media -%}
+          <figure class="gapsy-product__slide{% if media.id == current.featured_media.id %} is-current{% endif %}" data-media-id="{{ media.id }}" data-product-slide>
+            {%- if media.media_type == 'image' -%}
+              {%- if forloop.first -%}
+                {{ media | image_url: width: 2000 | image_tag: widths: '540, 720, 960, 1200, 1600, 2000', sizes: '(min-width: 992px) 55vw, 100vw', alt: media.alt | default: product.title, loading: 'eager', fetchpriority: 'high', class: 'gapsy-product__img' }}
+              {%- else -%}
+                {{ media | image_url: width: 2000 | image_tag: widths: '540, 720, 960, 1200, 1600, 2000', sizes: '(min-width: 992px) 55vw, 100vw', alt: media.alt | default: product.title, loading: 'lazy', class: 'gapsy-product__img' }}
+              {%- endif -%}
+            {%- else -%}
+              {{ media | media_tag: image_size: '2000x', class: 'gapsy-product__img' }}
+            {%- endif -%}
+          </figure>
+        {%- else -%}
+          <figure class="gapsy-product__slide">{{ 'product-1' | placeholder_svg_tag: 'gapsy-placeholder gapsy-product__img' }}</figure>
+        {%- endfor -%}
+      </div>
+      {%- if product.media.size > 1 -%}
+        <p class="gapsy-product__counter" aria-hidden="true"><span data-product-index>1</span> / {{ product.media.size }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="gapsy-product__info">
+      <div class="gapsy-product__sticky" data-product-info>
+        {%- if s.show_breadcrumbs -%}
+          <nav class="gapsy-crumbs" aria-label="Breadcrumbs" data-product-fade>
+            <a href="{{ routes.root_url }}">Home</a><span aria-hidden="true">/</span>
+            {%- if first_col != blank -%}<a href="{{ first_col.url }}">{{ first_col.title }}</a><span aria-hidden="true">/</span>{%- endif -%}
+            <span aria-current="page">{{ product.title }}</span>
+          </nav>
+        {%- endif -%}
+
+        <h1 class="gapsy-product__title" data-product-title>{{ product.title }}</h1>
+
+        <div class="gapsy-product__price" data-product-fade>
+          <span data-product-price>{{ current.price | money }}</span>
+          <s class="gapsy-product__compare" data-product-compare{% unless current.compare_at_price > current.price %} hidden{% endunless %}>{{ current.compare_at_price | money }}</s>
+        </div>
+        {%- if s.show_tax_note -%}<p class="gapsy-product__note" data-product-fade>{{ s.tax_note }}</p>{%- endif -%}
+
+        {%- form 'product', product, class: 'gapsy-product__form' -%}
+          <input type="hidden" name="id" value="{{ current.id }}" data-product-id>
+
+          {%- unless product.has_only_default_variant -%}
+            {%- for option in product.options_with_values -%}
+              {%- assign opt_name = option.name | downcase | replace: 'colour', 'color' -%}
+              <fieldset class="gapsy-product__option" data-product-fade>
+                <legend class="gapsy-product__label">{{ option.name }}: <span data-option-value="{{ forloop.index0 }}">{{ option.selected_value }}</span></legend>
+                <div class="gapsy-product__values{% if opt_name == color_name %} gapsy-product__values--swatch{% endif %}">
+                  {%- assign opt_index = forloop.index0 -%}
+                  {%- for value in option.values -%}
+                    {%- liquid
+                      assign v_img = blank
+                      for variant in product.variants
+                        if variant.options[opt_index] == value.name and variant.featured_image != blank
+                          assign v_img = variant.featured_image
+                          break
+                        endif
+                      endfor
+                      assign input_id = 'Opt-' | append: section.id | append: '-' | append: opt_index | append: '-' | append: forloop.index0
+                    -%}
+                    <input type="radio" class="gapsy-visually-hidden" id="{{ input_id }}" name="options[{{ option.name | escape }}]" value="{{ value.name | escape }}" data-option-index="{{ opt_index }}" {% if value.selected %}checked{% endif %}>
+                    {%- if opt_name == color_name -%}
+                      <label for="{{ input_id }}" class="gapsy-product__swatch" title="{{ value.name | escape }}">
+                        {%- if v_img != blank -%}
+                          {{ v_img | image_url: width: 120 | image_tag: alt: '', loading: 'lazy' }}
+                        {%- else -%}
+                          <span class="gapsy-product__swatch-color" style="background: {{ value.name | handleize | replace: '-', '' }};"></span>
+                        {%- endif -%}
+                        <span class="gapsy-visually-hidden">{{ value.name }}</span>
+                      </label>
+                    {%- else -%}
+                      <label for="{{ input_id }}" class="gapsy-product__pill">{{ value.name }}</label>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </div>
+              </fieldset>
+            {%- endfor -%}
+          {%- endunless -%}
+
+          <div class="gapsy-product__buy" data-product-fade>
+            {%- if s.show_quantity -%}
+              <div class="gapsy-qty" data-qty>
+                <button type="button" class="gapsy-qty__btn" data-qty-minus aria-label="Decrease quantity">−</button>
+                <input class="gapsy-qty__input" type="number" name="quantity" value="1" min="1" inputmode="numeric" aria-label="Quantity" data-qty-input>
+                <button type="button" class="gapsy-qty__btn" data-qty-plus aria-label="Increase quantity">+</button>
+              </div>
+            {%- endif -%}
+            <button type="submit" name="add" class="gapsy-btn gapsy-product__add" data-product-add data-add-label="{{ s.add_label | escape }}" data-sold-out-label="{{ s.sold_out_label | escape }}" {% unless current.available %}disabled{% endunless %}>
+              <span data-product-add-label>{% if current.available %}{{ s.add_label }}{% else %}{{ s.sold_out_label }}{% endif %}</span>
+              {%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-btn__icon' -%}
+            </button>
+          </div>
+          <p class="gapsy-product__error" role="alert" data-product-error hidden></p>
+          {%- if s.show_dynamic_checkout -%}<div class="gapsy-product__dynamic">{{ form | payment_button }}</div>{%- endif -%}
+        {%- endform -%}
+
+        <div class="gapsy-product__accs" data-product-fade>
+          {%- for block in section.blocks -%}
+            {%- case block.type -%}
+              {%- when 'description' -%}
+                {%- if product.description != blank -%}
+                  <details class="gapsy-acc" {% if block.settings.open %}open{% endif %} {{ block.shopify_attributes }}>
+                    <summary>{{ block.settings.title }}<span class="gapsy-acc__icon" aria-hidden="true"></span></summary>
+                    <div class="gapsy-acc__body gapsy-rte">{{ product.description }}</div>
+                  </details>
+                {%- endif -%}
+              {%- when 'accordion' -%}
+                <details class="gapsy-acc" {% if block.settings.open %}open{% endif %} {{ block.shopify_attributes }}>
+                  <summary>{{ block.settings.title }}<span class="gapsy-acc__icon" aria-hidden="true"></span></summary>
+                  <div class="gapsy-acc__body gapsy-rte">{{ block.settings.content }}</div>
+                </details>
+              {%- when 'text' -%}
+                <div class="gapsy-product__text gapsy-rte" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gapsy-toast" role="status" aria-live="polite" data-product-toast>
+    <span>{{ s.added_text }}</span>
+    <a href="{{ routes.cart_url }}">{{ s.view_cart_label }}</a>
+  </div>
+
+  <script type="application/json" data-product-json>{{ product | json }}</script>
+  <script type="application/json" data-money-format>{{ shop.money_format | json }}</script>
+</section>
+
+{% stylesheet %}
+  .gapsy-product__grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 3.75rem; align-items: start; }
+  .gapsy-product__media { position: relative; }
+  .gapsy-product__track { display: grid; gap: 1.25rem; }
+  .gapsy-product__slide { margin: 0; height: 46rem; background: var(--media-bg, #ebebeb); overflow: hidden; scroll-margin-top: 2rem; }
+  .gapsy-product__img { width: 100%; height: 100%; object-fit: contain; padding: 3rem; }
+  .gapsy-product__slide video, .gapsy-product__slide iframe { width: 100%; height: 100%; object-fit: cover; }
+  .gapsy-product__counter { display: none; }
+  .gapsy-product__sticky { position: sticky; top: 2rem; display: flex; flex-direction: column; gap: 1.5rem; }
+  .gapsy-product__title { margin: 0.25rem 0 0; font-family: var(--gapsy-font-display); font-weight: 400; font-size: 5.5rem; line-height: 1; letter-spacing: 0.01em; text-transform: uppercase; }
+  .gapsy-product__price { display: flex; align-items: baseline; gap: 1rem; font-family: var(--gapsy-font-condensed); font-weight: 700; font-size: 3rem; line-height: 1; }
+  .gapsy-product__compare { font-weight: 500; font-size: 0.6em; opacity: 0.5; }
+  .gapsy-product__note { margin-top: -0.75rem; font-size: 0.9375rem; color: var(--gapsy-grey-80); }
+  .gapsy-product__form { display: flex; flex-direction: column; gap: 1.5rem; margin: 0; }
+  .gapsy-product__option { margin: 0; padding: 0; border: 0; min-width: 0; }
+  .gapsy-product__label { margin-bottom: 0.75rem; padding: 0; font-family: var(--gapsy-font-condensed); font-weight: 600; font-size: 1.5rem; text-transform: uppercase; }
+  .gapsy-product__label span { font-weight: 400; color: var(--gapsy-grey-80); }
+  .gapsy-product__values { display: flex; flex-wrap: wrap; gap: 0.625rem; }
+  .gapsy-product__swatch { display: block; width: 4rem; height: 4rem; padding: 0.375rem; border: 2px solid transparent; border-radius: 50%; background: #e3e3e3; cursor: pointer; transition: border-color 0.3s, transform 0.4s var(--gapsy-ease); }
+  .gapsy-product__swatch img, .gapsy-product__swatch-color { display: block; width: 100%; height: 100%; border-radius: 50%; object-fit: contain; }
+  .gapsy-product__swatch:hover { transform: scale(1.06); }
+  .gapsy-product__pill { display: inline-flex; align-items: center; min-height: 3rem; padding: 0 1.25rem; border: 1px solid rgba(0, 0, 0, 0.25); border-radius: 999px; cursor: pointer; font-family: var(--gapsy-font-condensed); font-weight: 500; font-size: 1.375rem; text-transform: uppercase; transition: background 0.3s, color 0.3s; }
+  input:checked + .gapsy-product__swatch { border-color: var(--gapsy-black); }
+  input:checked + .gapsy-product__pill { background: var(--gapsy-black); color: var(--gapsy-white); border-color: var(--gapsy-black); }
+  input:focus-visible + label { outline: 2px solid var(--gapsy-primary); outline-offset: 2px; }
+  input.is-unavailable + .gapsy-product__pill { opacity: 0.4; text-decoration: line-through; }
+  input.is-unavailable + .gapsy-product__swatch { opacity: 0.45; }
+  .gapsy-product__buy { display: flex; gap: 0.75rem; align-items: center; }
+  .gapsy-product__add { flex: 1; }
+  .gapsy-product__error { color: var(--gapsy-primary); font-size: 0.9375rem; }
+  .gapsy-product__accs { margin-top: 1rem; }
+  .gapsy-product .gapsy-toast { position: fixed; }
+
+  @media (max-width: 991px) {
+    .gapsy-product__grid { grid-template-columns: 1fr; gap: 1.5rem; padding-top: 0.5rem; }
+    .gapsy-product__media { margin-inline: calc(-1 * var(--gapsy-gutter)); }
+    .gapsy-product__track { display: flex; gap: 0; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .gapsy-product__track::-webkit-scrollbar { display: none; }
+    .gapsy-product__slide { flex: 0 0 100%; height: auto; aspect-ratio: 1; scroll-snap-align: start; }
+    .gapsy-product__img { padding: 1.5rem; }
+    .gapsy-product__counter { display: block; position: absolute; right: var(--gapsy-gutter); bottom: 1rem; padding: 0.25rem 0.75rem; border-radius: 999px; background: var(--gapsy-white); font-family: var(--gapsy-font-condensed); font-weight: 600; font-size: 1.125rem; }
+    .gapsy-product__sticky { position: static; gap: 1.25rem; }
+    .gapsy-product__title { font-size: 3.25rem; }
+    .gapsy-product__price { font-size: 2.25rem; }
+    .gapsy-product__swatch { width: 3.25rem; height: 3.25rem; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Gapsy · Product",
+  "tag": "div",
+  "class": "gapsy-section-wrap",
+  "settings": [
+    { "type": "checkbox", "id": "show_breadcrumbs", "label": "Show breadcrumbs", "default": true },
+    { "type": "text", "id": "crumb_collection", "label": "Breadcrumb collection handle", "info": "Collection shown in the breadcrumbs. Empty = the first collection of the product." },
+    { "type": "text", "id": "color_option", "label": "Colour option name", "default": "Color", "info": "This option is shown as round swatches with the variant photos." },
+    { "type": "checkbox", "id": "show_quantity", "label": "Show quantity", "default": true },
+    { "type": "text", "id": "add_label", "label": "Add to cart label", "default": "Add to cart" },
+    { "type": "text", "id": "sold_out_label", "label": "Sold out label", "default": "Sold out" },
+    { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show \"Buy it now\" buttons", "default": false },
+    { "type": "checkbox", "id": "show_tax_note", "label": "Show note under price", "default": true },
+    { "type": "text", "id": "tax_note", "label": "Note under price", "default": "Taxes included. Shipping calculated at checkout." },
+    { "type": "text", "id": "added_text", "label": "Toast: added text", "default": "Added to your cart" },
+    { "type": "text", "id": "view_cart_label", "label": "Toast: link label", "default": "View cart" },
+    { "type": "color", "id": "media_background", "label": "Photo background", "default": "#ebebeb" },
+    { "type": "range", "id": "padding_top", "label": "Top padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 80 }
+  ],
+  "blocks": [
+    {
+      "type": "description",
+      "name": "Product description",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Description" },
+        { "type": "checkbox", "id": "open", "label": "Open by default", "default": true }
+      ]
+    },
+    {
+      "type": "accordion",
+      "name": "Accordion",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Shipping & returns" },
+        { "type": "richtext", "id": "content", "label": "Content", "default": "<p>Free shipping on orders over $150. Easy returns within 30 days.</p>" },
+        { "type": "checkbox", "id": "open", "label": "Open by default", "default": false }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [{ "type": "richtext", "id": "text", "label": "Text", "default": "<p>Text</p>" }]
+    }
+  ],
+  "max_blocks": 8
+}
+{% endschema %}

@@ -1,0 +1,145 @@
+/*
+  Gapsy · Modern Bags — base styles shared by all gapsy-* sections.
+  Rem system: 1rem = 16px on a 1440px screen, scales with the viewport on desktop (stops at 1920),
+  fixed 16px on tablet/mobile. Every size from Figma = px / 16.
+  Brand colours come from CSS variables printed in snippets/gapsy-head.liquid (Theme settings).
+  Section-specific styles live in each section's {% stylesheet %} tag.
+*/
+
+html { font-size: 16px; }
+@media (min-width: 992px) { html { font-size: min(calc(100vw / 90), 21.3333px); } }
+@media (max-width: 374px) { html { font-size: calc(100vw / 23.4375); } }
+
+:root {
+  --gapsy-gutter: 2.5rem;
+  --gapsy-max: 90rem;
+  --gapsy-ease: cubic-bezier(0.65, 0, 0.35, 1);
+  --gapsy-font-display: 'Anton', 'Impact', sans-serif;
+  --gapsy-font-serif: 'Playfair Display', Georgia, serif;
+  --gapsy-font-sans: 'Inter', system-ui, sans-serif;
+  --gapsy-font-condensed: 'Alumni Sans', 'Arial Narrow', sans-serif;
+  --gapsy-font-condensed-sc: 'Alumni Sans SC', 'Alumni Sans', 'Arial Narrow', sans-serif;
+  --gapsy-header-h: 7rem;
+}
+@media (max-width: 767px) { :root { --gapsy-gutter: 1rem; --gapsy-header-h: 4.5rem; } }
+
+body { background: var(--gapsy-white); }
+
+.gapsy-section { position: relative; background: var(--gapsy-white); color: var(--gapsy-black); font-family: var(--gapsy-font-sans); overflow: clip; }
+:where(.gapsy-section) *, :where(.gapsy-section) *::before, :where(.gapsy-section) *::after { box-sizing: border-box; }
+:where(.gapsy-section) img { display: block; max-width: 100%; }
+:where(.gapsy-section) a { color: inherit; text-decoration: none; }
+:where(.gapsy-section) p { margin: 0; }
+:where(.gapsy-section) ul { list-style: none; margin: 0; padding: 0; }
+
+.gapsy-container { width: 100%; max-width: var(--gapsy-max); margin-inline: auto; padding-inline: var(--gapsy-gutter); }
+.gapsy-pad { padding-top: var(--gapsy-pt, 3rem); padding-bottom: var(--gapsy-pb, 3rem); }
+@media (max-width: 767px) { .gapsy-pad { padding-top: var(--gapsy-pt-m, 2.5rem); padding-bottom: var(--gapsy-pb-m, 2.5rem); } }
+
+/* ---------- Headings: Anton uppercase, italic words (<em>) in Playfair ---------- */
+.gapsy-h {
+  margin: 0;
+  font-family: var(--gapsy-font-display);
+  font-weight: 400;
+  font-size: var(--gapsy-h-size, 6.875rem);
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: inherit;
+}
+.gapsy-h em, .gapsy-h i {
+  font-family: var(--gapsy-font-serif);
+  font-style: italic;
+  font-size: var(--gapsy-h-em-size, 0.582em);
+  text-transform: none;
+  letter-spacing: 0;
+  line-height: 1;
+}
+.gapsy-h strong, .gapsy-h b { font-weight: 400; }
+@media (max-width: 991px) {
+  .gapsy-h { font-size: var(--gapsy-h-size-m, 3.5rem); line-height: 1.15; }
+  .gapsy-h em, .gapsy-h i { font-size: var(--gapsy-h-em-size-m, 0.582em); }
+}
+
+/* ---------- Arrow link (Start shopping / Learn more / View more) ---------- */
+.gapsy-link {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: var(--gapsy-font-condensed-sc); font-weight: 600; text-transform: uppercase;
+  font-size: var(--gapsy-link-size, 3rem); line-height: 1.1;
+  color: var(--gapsy-link-color, var(--gapsy-primary));
+}
+.gapsy-link__label { position: relative; }
+.gapsy-link__label::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0.06em; height: 0.045em; min-height: 1px;
+  background: currentColor; transform-origin: right; transition: transform 0.5s var(--gapsy-ease);
+}
+.gapsy-link__icon { width: 1em; height: 1em; flex: none; transition: transform 0.5s var(--gapsy-ease); }
+@media (hover: hover) {
+  .gapsy-link:hover .gapsy-link__label::after { transform: scaleX(0); }
+  .gapsy-link:hover .gapsy-link__icon { transform: rotate(45deg); }
+}
+@media (max-width: 991px) { .gapsy-link { font-size: var(--gapsy-link-size-m, 2rem); } }
+
+/* ---------- Media ---------- */
+.gapsy-media { position: relative; overflow: hidden; }
+.gapsy-media > img, .gapsy-media > svg { width: 100%; height: 100%; object-fit: cover; }
+.gapsy-placeholder { width: 100%; height: 100%; background: var(--gapsy-surface); fill: rgba(0, 0, 0, 0.15); }
+
+/* ---------- Rotating "choose a bag" badge ---------- */
+.gapsy-badge { position: relative; display: block; width: var(--gapsy-badge-size, 13rem); aspect-ratio: 1; color: var(--gapsy-black); }
+.gapsy-badge__ring { width: 100%; height: 100%; animation: gapsy-spin var(--gapsy-badge-speed, 14s) linear infinite; }
+.gapsy-badge__ring text { font-family: var(--gapsy-font-display); font-size: 20px; letter-spacing: 0.02em; text-transform: uppercase; fill: currentColor; }
+.gapsy-badge__icon { position: absolute; inset: 0; margin: auto; width: 24%; height: 24%; transition: transform 0.5s var(--gapsy-ease); }
+@media (hover: hover) { a.gapsy-badge:hover .gapsy-badge__icon { transform: rotate(45deg); } }
+@keyframes gapsy-spin { to { transform: rotate(360deg); } }
+
+/* ---------- Split text helpers ---------- */
+.gapsy-mask { display: inline-block; overflow: clip; vertical-align: top; padding: 0.08em 0.02em 0.06em; margin: -0.08em -0.02em -0.06em; }
+.gapsy-mask > span { display: inline-block; will-change: transform; }
+.gapsy-word { display: inline-block; white-space: nowrap; }
+
+/* Elements hidden until the intro starts. Safety net: shown after 2.5s if JS fails. */
+.gapsy-js .gapsy-pre { opacity: 0; animation: gapsy-fallback 0.4s 2.5s forwards; }
+@keyframes gapsy-fallback { to { opacity: 1; } }
+
+.gapsy-visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* ---------- Product card (snippets/gapsy-product-card.liquid; height via --card-h) ---------- */
+.gapsy-card { position: relative; }
+.gapsy-card__media { position: relative; height: var(--card-h, 27rem); background: var(--card-bg, rgba(233, 233, 233, 0.9)); overflow: hidden; }
+.gapsy-card__link, .gapsy-card__img { position: absolute; inset: 0; display: block; }
+.gapsy-card__image { width: 100%; height: 100%; object-fit: contain; object-position: center bottom; padding: 1.25rem 1.25rem 0; transition: transform 1s var(--gapsy-ease), opacity 0.3s; }
+svg.gapsy-card__image { object-fit: cover; padding: 0; }
+@media (hover: hover) { .gapsy-card__media:hover .gapsy-card__image { transform: scale(1.05); } }
+.gapsy-card__swatches { position: absolute; z-index: 2; top: 0.75rem; left: 0.75rem; display: flex; }
+.gapsy-card__swatch { position: relative; width: 2.5rem; height: 2.5rem; margin-right: -1rem; padding: 0.375rem; border: 2px solid #fff; border-radius: 50%; background: #e3e3e3; cursor: pointer; transition: transform 0.4s var(--gapsy-ease), margin 0.4s var(--gapsy-ease); }
+.gapsy-card__swatch img, .gapsy-card__swatch-color { display: block; width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
+.gapsy-card__swatch.is-active { z-index: 1; border-color: var(--gapsy-black); }
+.gapsy-card__swatches:hover .gapsy-card__swatch, .gapsy-card__swatches:focus-within .gapsy-card__swatch { margin-right: 0.25rem; }
+.gapsy-card__swatch:focus-visible { outline: 2px solid var(--gapsy-primary); outline-offset: 2px; }
+.gapsy-card__form { position: absolute; z-index: 2; top: 0.75rem; right: 0.75rem; margin: 0; }
+.gapsy-card__cart { position: relative; display: flex; align-items: center; justify-content: center; width: 4.5rem; height: 4.5rem; padding: 0; border: 0; border-radius: 50%; background: var(--gapsy-black); color: #fff; cursor: pointer; transition: transform 0.4s var(--gapsy-ease), background 0.3s; }
+.gapsy-card__cart:hover { transform: scale(1.08); background: var(--gapsy-primary); }
+.gapsy-card__cart:disabled { opacity: 0.4; cursor: not-allowed; transform: none; background: var(--gapsy-black); }
+.gapsy-card__cart:focus-visible { outline: 2px solid var(--gapsy-primary); outline-offset: 3px; }
+.gapsy-card__cart-icon, .gapsy-card__check { width: 1.875rem; height: 1.875rem; transition: transform 0.4s var(--gapsy-ease), opacity 0.3s; }
+.gapsy-card__check { position: absolute; opacity: 0; transform: scale(0.5); }
+.gapsy-card__cart.is-added .gapsy-card__cart-icon { opacity: 0; transform: scale(0.5); }
+.gapsy-card__cart.is-added .gapsy-card__check { opacity: 1; transform: none; }
+.gapsy-card__cart.is-loading { pointer-events: none; opacity: 0.7; }
+.gapsy-card__info { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-top: 0.625rem; color: inherit; }
+.gapsy-section .gapsy-card__title { margin: 0; font-family: var(--gapsy-font-condensed); font-weight: 500; font-size: 2.125rem; line-height: 1.2; letter-spacing: normal; text-transform: uppercase; }
+.gapsy-card__price { flex: none; font-family: var(--gapsy-font-condensed); font-weight: 700; font-size: 2.25rem; line-height: 1.2; }
+.gapsy-card__compare { font-weight: 500; font-size: 0.7em; opacity: 0.5; }
+@media (max-width: 991px) {
+  .gapsy-card__cart { width: 3.25rem; height: 3.25rem; }
+  .gapsy-card__cart-icon, .gapsy-card__check { width: 1.375rem; height: 1.375rem; }
+  .gapsy-card__swatch { width: 2rem; height: 2rem; padding: 0.25rem; margin-right: 0.25rem; }
+  .gapsy-section .gapsy-card__title { font-size: 1.5rem; }
+  .gapsy-card__price { font-size: 1.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gapsy-badge__ring { animation: none; }
+  .gapsy-js .gapsy-pre { opacity: 1; animation: none; }
+}

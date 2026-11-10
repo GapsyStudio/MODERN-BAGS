@@ -1,0 +1,191 @@
+{%- comment -%}
+  Gapsy · Footer (replaces Horizon's footer in the Footer group).
+  Data: blocks "Menu column" (Navigation menu + optional title), newsletter (Shopify customer form,
+  tagged "newsletter"), big gradient wordmark (auto-fits the width), copyright, legal links
+  (store policies from Settings → Policies, or a custom menu).
+  JS: assets/gapsy-footer.js — wordmark fit + letters rise, columns fade up.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign wordmark = s.wordmark | default: shop.name
+  assign legal = s.legal_menu
+  if legal == blank and s.legal_menu_handle != blank
+    assign legal = linklists[s.legal_menu_handle]
+  endif
+-%}
+<div
+  class="gapsy-section gapsy-footer gapsy-pad"
+  data-gapsy-section="footer"
+  style="--gapsy-pt: {{ s.padding_top | divided_by: 16.0 }}rem; --gapsy-pb: {{ s.padding_bottom | divided_by: 16.0 }}rem; --wm-from: {{ s.wordmark_from }}; --wm-mid: {{ s.wordmark_mid }}; --wm-to: {{ s.wordmark_to }}; background: {{ s.background }}; color: {{ s.text_color }};"
+>
+  <div class="gapsy-container">
+    <div class="gapsy-footer__top">
+      <div class="gapsy-footer__cols">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign menu = block.settings.menu
+            if menu == blank and block.settings.menu_handle != blank
+              assign menu = linklists[block.settings.menu_handle]
+            endif
+            assign col_title = block.settings.title | default: menu.title
+          -%}
+          <nav class="gapsy-footer__col" aria-label="{{ col_title | escape }}" data-footer-fade {{ block.shopify_attributes }}>
+            {%- if col_title != blank -%}<p class="gapsy-footer__col-title">{{ col_title }}</p>{%- endif -%}
+            <ul class="gapsy-footer__links">
+              {%- for link in menu.links -%}
+                <li><a href="{{ link.url }}" class="gapsy-footer__link">{{ link.title }}</a></li>
+              {%- else -%}
+                <li class="gapsy-footer__empty">Pick a menu in the editor</li>
+              {%- endfor -%}
+            </ul>
+          </nav>
+        {%- endfor -%}
+      </div>
+
+      {%- if s.show_newsletter -%}
+        <div class="gapsy-footer__news" data-footer-fade>
+          {%- if s.newsletter_text != blank -%}<p class="gapsy-footer__news-text">{{ s.newsletter_text }}</p>{%- endif -%}
+          {%- form 'customer', id: 'GapsyNewsletter', class: 'gapsy-footer__form' -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            {%- if form.posted_successfully? -%}
+              <p class="gapsy-footer__msg" role="status">{{ s.success_text }}</p>
+            {%- else -%}
+              <label for="GapsyNewsletterEmail" class="gapsy-visually-hidden">{{ s.placeholder }}</label>
+              <div class="gapsy-footer__field">
+                <input id="GapsyNewsletterEmail" type="email" name="contact[email]" required autocomplete="email" placeholder="{{ s.placeholder | escape }}" class="gapsy-footer__input"{% if form.errors %} aria-invalid="true" aria-describedby="GapsyNewsletterError"{% endif %}>
+                <button type="submit" class="gapsy-footer__submit" aria-label="{{ s.submit_label | escape }}">
+                  {%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-footer__submit-icon' -%}
+                </button>
+              </div>
+              {%- if form.errors -%}
+                <p class="gapsy-footer__msg gapsy-footer__msg--error" id="GapsyNewsletterError" role="alert">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>
+              {%- endif -%}
+            {%- endif -%}
+          {%- endform -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if wordmark != blank -%}
+      <p class="gapsy-footer__wordmark" data-footer-wordmark>{{ wordmark }}</p>
+    {%- endif -%}
+
+    <div class="gapsy-footer__bottom">
+      {%- assign current_year = 'now' | date: '%Y' -%}
+      <p class="gapsy-footer__copy">{{ s.copyright | replace: '[year]', current_year }}</p>
+      <ul class="gapsy-footer__legal">
+        {%- if legal.links.size > 0 -%}
+          {%- for link in legal.links -%}
+            <li><a href="{{ link.url }}" class="gapsy-footer__legal-link">{{ link.title }}{%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-footer__legal-icon' -%}</a></li>
+          {%- endfor -%}
+        {%- else -%}
+          {%- for policy in shop.policies -%}
+            <li><a href="{{ policy.url }}" class="gapsy-footer__legal-link">{{ policy.title }}{%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-footer__legal-icon' -%}</a></li>
+          {%- endfor -%}
+        {%- endif -%}
+      </ul>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .gapsy-footer { font-family: var(--gapsy-font-sans); }
+  .gapsy-footer__top { display: flex; justify-content: space-between; align-items: center; gap: 3rem; }
+  .gapsy-footer__cols { display: flex; gap: 3.5rem; }
+  .gapsy-footer__col { width: 9.875rem; }
+  .gapsy-footer__col-title { margin: 0 0 1.75rem; font-size: 1rem; text-transform: uppercase; opacity: 0.7; }
+  .gapsy-footer__links { display: flex; flex-direction: column; gap: 1rem; }
+  .gapsy-footer__link { position: relative; font-size: 0.9375rem; text-transform: uppercase; white-space: nowrap; }
+  .gapsy-footer__link::after { content: ''; position: absolute; left: 0; right: 0; bottom: -0.2em; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform 0.5s var(--gapsy-ease); }
+  @media (hover: hover) { .gapsy-footer__link:hover::after { transform: scaleX(1); transform-origin: left; } }
+  .gapsy-footer__empty { font-size: 0.875rem; opacity: 0.5; }
+  .gapsy-footer__news { display: flex; flex-direction: column; align-items: flex-end; gap: 6.5rem; width: 34.6875rem; }
+  .gapsy-footer__news-text { font-size: 1.125rem; text-align: right; }
+  .gapsy-footer__form { width: 31.5rem; margin: 0; }
+  .gapsy-footer__field { display: flex; align-items: center; gap: 1rem; padding-bottom: 1rem; border-bottom: 1px solid currentColor; }
+  .gapsy-footer .gapsy-footer__input { flex: 1; min-width: 0; height: auto; padding: 0; border: 0; border-radius: 0; background: transparent !important; box-shadow: none; color: inherit; font: inherit; font-size: 1.25rem; outline: none; -webkit-appearance: none; appearance: none; }
+  .gapsy-footer__input::placeholder { color: inherit; opacity: 1; }
+  .gapsy-footer__field:focus-within { border-bottom-color: var(--wm-mid); }
+  .gapsy-footer__submit { display: flex; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; }
+  .gapsy-footer__submit-icon { width: 1.5rem; height: 1.5rem; transition: transform 0.5s var(--gapsy-ease); }
+  .gapsy-footer__submit:hover .gapsy-footer__submit-icon, .gapsy-footer__submit:focus-visible .gapsy-footer__submit-icon { transform: rotate(45deg); }
+  .gapsy-footer__msg { margin-top: 0.75rem; font-size: 1rem; }
+  .gapsy-footer__msg--error { color: var(--wm-to); }
+  .gapsy-footer__wordmark {
+    margin: 4rem 0 0; font-family: var(--gapsy-font-display); font-size: calc((min(100vw, 120rem) - 2 * var(--gapsy-gutter)) / 5.3); line-height: 1; white-space: nowrap; text-transform: uppercase; text-align: center;
+    background: linear-gradient(180deg, var(--wm-from) 42%, var(--wm-mid) 85%, var(--wm-to) 100%); -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .gapsy-footer__wordmark .gapsy-mask > span { background: inherit; -webkit-background-clip: text; background-clip: text; color: transparent; background-image: linear-gradient(180deg, var(--wm-from) 42%, var(--wm-mid) 85%, var(--wm-to) 100%); }
+  .gapsy-footer__bottom { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; margin-top: 4rem; }
+  .gapsy-footer__copy { font-size: 1.125rem; }
+  .gapsy-footer__legal { display: flex; gap: 3.5rem; }
+  .gapsy-footer__legal-link { display: inline-flex; align-items: flex-start; gap: 0.25rem; font-size: 1.125rem; }
+  .gapsy-footer__legal-icon { width: 1.5rem; height: 1.5rem; transition: transform 0.5s var(--gapsy-ease); }
+  @media (hover: hover) { .gapsy-footer__legal-link:hover .gapsy-footer__legal-icon { transform: rotate(45deg); } }
+  @media (max-width: 991px) {
+    .gapsy-footer__top { flex-direction: column-reverse; align-items: stretch; gap: 3rem; }
+    .gapsy-footer__cols { flex-wrap: wrap; gap: 2rem 1.5rem; }
+    .gapsy-footer__col { width: calc(50% - 0.75rem); }
+    .gapsy-footer__col-title { margin-bottom: 1rem; }
+    .gapsy-footer__news { width: 100%; align-items: stretch; gap: 1.5rem; }
+    .gapsy-footer__news-text { text-align: left; }
+    .gapsy-footer__form { width: 100%; }
+    .gapsy-footer__wordmark { margin-top: 3rem; }
+    .gapsy-footer__bottom { flex-direction: column; align-items: flex-start; margin-top: 2rem; }
+    .gapsy-footer__legal { flex-direction: column; gap: 0.75rem; }
+    .gapsy-footer__copy, .gapsy-footer__legal-link { font-size: 1rem; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Gapsy · Footer",
+  "tag": "div",
+  "class": "gapsy-section-wrap",
+  "enabled_on": { "groups": ["footer"] },
+  "settings": [
+    { "type": "header", "content": "Newsletter" },
+    { "type": "checkbox", "id": "show_newsletter", "label": "Show newsletter", "default": true },
+    { "type": "text", "id": "newsletter_text", "label": "Text", "default": "Get exclusive offers and new arrivals straight to your inbox." },
+    { "type": "text", "id": "placeholder", "label": "Email placeholder", "default": "Enter your email" },
+    { "type": "text", "id": "submit_label", "label": "Submit button label (screen readers)", "default": "Subscribe" },
+    { "type": "text", "id": "success_text", "label": "Success message", "default": "Thanks for subscribing!" },
+    { "type": "header", "content": "Wordmark" },
+    { "type": "text", "id": "wordmark", "label": "Big wordmark", "default": "MODERN BAGS", "info": "Empty = store name. Fits the width automatically." },
+    { "type": "color", "id": "wordmark_from", "label": "Wordmark gradient, top", "default": "#ffffff" },
+    { "type": "color", "id": "wordmark_mid", "label": "Wordmark gradient, middle", "default": "#ffb87e" },
+    { "type": "color", "id": "wordmark_to", "label": "Wordmark gradient, bottom", "default": "#ff9e76" },
+    { "type": "header", "content": "Bottom row" },
+    { "type": "text", "id": "copyright", "label": "Copyright", "default": "© Modern Bags [year]", "info": "[year] = current year." },
+    { "type": "link_list", "id": "legal_menu", "label": "Legal links menu", "info": "Empty = store policies (Settings → Policies)." },
+    { "type": "text", "id": "legal_menu_handle", "label": "Legal menu handle (fallback)", "default": "legal" },
+    { "type": "header", "content": "Section" },
+    { "type": "color", "id": "background", "label": "Background", "default": "#000000" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#ffffff" },
+    { "type": "range", "id": "padding_top", "label": "Top padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 48 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 48 }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menu column",
+      "settings": [
+        { "type": "link_list", "id": "menu", "label": "Menu" },
+        { "type": "text", "id": "menu_handle", "label": "Menu handle (fallback)", "info": "Used when no menu is picked, e.g. customer-care." },
+        { "type": "text", "id": "title", "label": "Column title", "info": "Empty = menu name." }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Gapsy · Footer",
+      "blocks": [
+        { "type": "menu", "settings": { "menu_handle": "customer-care", "title": "Customer care" } },
+        { "type": "menu", "settings": { "menu_handle": "shop", "title": "Shop" } },
+        { "type": "menu", "settings": { "menu_handle": "contact", "title": "Contact" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

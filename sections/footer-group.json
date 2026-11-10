@@ -1,0 +1,50 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "t:names.footer",
+  "sections": {
+    "gapsy_footer": {
+      "type": "gapsy-footer",
+      "blocks": {
+        "col_care": {
+          "type": "menu",
+          "settings": {
+            "menu_handle": "customer-care",
+            "title": "Customer care"
+          }
+        },
+        "col_shop": {
+          "type": "menu",
+          "settings": {
+            "menu_handle": "shop",
+            "title": "Shop"
+          }
+        },
+        "col_contact": {
+          "type": "menu",
+          "settings": {
+            "menu_handle": "contact",
+            "title": "Contact"
+          }
+        }
+      },
+      "block_order": [
+        "col_care",
+        "col_shop",
+        "col_contact"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "gapsy_footer"
+  ]
+}

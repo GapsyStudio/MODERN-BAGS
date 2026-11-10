@@ -1,0 +1,125 @@
+{%- comment -%}
+  Gapsy · About — "not just a BRAND" + 3 numbered features with photos.
+  Data: heading (italic words via the editor's italic button), blocks "Feature" (number, title, text, photo,
+  photo above/below, photo size, vertical offset, parallax speed).
+  JS: assets/gapsy-about.js — heading letters rise, features fade up, photos unmask + parallax.
+  Mobile: features stack in 1 column (2 on tablet), parallax off.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<section
+  class="gapsy-section gapsy-about gapsy-pad"
+  data-gapsy-section="about"
+  data-parallax="{{ s.parallax }}"
+  {% if s.anchor_id != blank %}id="{{ s.anchor_id | handleize }}"{% endif %}
+  style="--gapsy-pt: {{ s.padding_top | divided_by: 16.0 }}rem; --gapsy-pb: {{ s.padding_bottom | divided_by: 16.0 }}rem; --about-gap: {{ s.heading_gap | divided_by: 16.0 }}rem; background: {{ s.background }}; color: {{ s.text_color }};"
+>
+  <div class="gapsy-container">
+    {%- render 'gapsy-heading', text: s.heading, size: s.heading_size, em_size: s.em_size, size_mobile: s.heading_size_mobile -%}
+
+    <div class="gapsy-about__grid">
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        {%- capture number -%}{%- if b.number != blank -%}{{ b.number }}{%- else -%}{{ forloop.index | prepend: '0' | slice: -2, 2 }}{%- endif -%}{%- endcapture -%}
+        <article
+          class="gapsy-about__item gapsy-about__item--{{ b.image_position }}"
+          style="--item-offset: {{ b.offset | divided_by: 16.0 }}rem; --img-w: {{ b.image_width | divided_by: 16.0 }}rem; --img-h: {{ b.image_height | divided_by: 16.0 }}rem;"
+          data-about-item
+          {{ block.shopify_attributes }}
+        >
+          <div class="gapsy-about__copy" data-about-copy>
+            <p class="gapsy-about__num">{{ number }}</p>
+            {%- if b.title != blank -%}<h3 class="gapsy-about__title">{{ b.title }}</h3>{%- endif -%}
+            {%- if b.text != blank -%}<p class="gapsy-about__text">{{ b.text }}</p>{%- endif -%}
+          </div>
+          {%- if b.show_image -%}
+            <div class="gapsy-about__img-wrap" data-speed="{{ b.parallax }}" data-about-parallax>
+              <div class="gapsy-media gapsy-about__img" data-about-img>
+                {%- render 'gapsy-image', image: b.image, sizes: '(min-width: 992px) 12vw, 40vw' -%}
+              </div>
+            </div>
+          {%- endif -%}
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .gapsy-about__grid { display: grid; grid-template-columns: 33.4375rem 33.75rem 1fr; margin-top: var(--about-gap, 2.9375rem); align-items: start; }
+  .gapsy-about__item { display: flex; flex-direction: column; gap: 2rem; padding-top: var(--item-offset, 0); }
+  .gapsy-about__item--above { flex-direction: column-reverse; justify-content: flex-end; }
+  .gapsy-about__num { font-weight: 300; font-size: 2.5rem; line-height: 1.2; opacity: 0.5; color: var(--gapsy-grey-100); }
+  .gapsy-about__title { margin: 1rem 0 0; font-family: var(--gapsy-font-condensed); font-weight: 600; font-size: 2rem; line-height: 1.3; text-transform: uppercase; }
+  .gapsy-about__text { margin-top: 0.25rem; max-width: 17.7rem; font-size: 1.125rem; line-height: 1.4; text-transform: lowercase; color: var(--gapsy-grey-100); }
+  .gapsy-about__img-wrap { width: var(--img-w); }
+  .gapsy-about__img { width: var(--img-w); height: var(--img-h); }
+  .gapsy-about__item--above .gapsy-about__img-wrap { margin-left: -0.5625rem; }
+  @media (max-width: 991px) {
+    .gapsy-about__grid { grid-template-columns: 1fr 1fr; gap: 3rem 1.5rem; margin-top: 2rem; }
+    .gapsy-about__item { padding-top: 0; flex-direction: column; }
+    .gapsy-about__item--above { flex-direction: column-reverse; justify-content: flex-end; }
+    .gapsy-about__item--above .gapsy-about__img-wrap { margin-left: 0; }
+    .gapsy-about__img-wrap, .gapsy-about__img { width: 100%; }
+    .gapsy-about__img { height: auto; aspect-ratio: 3 / 4; }
+  }
+  @media (max-width: 567px) {
+    .gapsy-about__grid { grid-template-columns: 1fr; }
+    .gapsy-about__item { flex-direction: row; align-items: flex-end; gap: 1rem; }
+    .gapsy-about__item--above { flex-direction: row-reverse; justify-content: flex-end; }
+    .gapsy-about__copy { flex: 1; }
+    .gapsy-about__img-wrap { width: 40%; flex: none; }
+    .gapsy-about__num { font-size: 2rem; }
+    .gapsy-about__title { font-size: 1.75rem; margin-top: 0.5rem; }
+    .gapsy-about__text { font-size: 1rem; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Gapsy · About",
+  "tag": "div",
+  "class": "gapsy-section-wrap",
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "<em>not just a</em> Brand", "info": "Italic words are shown in Playfair Display." },
+    { "type": "range", "id": "heading_size", "label": "Heading size (px @1440)", "min": 40, "max": 200, "step": 2, "default": 110 },
+    { "type": "range", "id": "em_size", "label": "Italic words size (px @1440)", "min": 20, "max": 140, "step": 2, "default": 64 },
+    { "type": "range", "id": "heading_size_mobile", "label": "Heading size, mobile (px)", "min": 28, "max": 100, "step": 2, "default": 56 },
+    { "type": "range", "id": "heading_gap", "label": "Space under heading (px @1440)", "min": 0, "max": 160, "step": 2, "default": 46 },
+    { "type": "color", "id": "background", "label": "Background", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#000000" },
+    { "type": "range", "id": "padding_top", "label": "Top padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 48 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 80 },
+    { "type": "checkbox", "id": "parallax", "label": "Photo parallax", "default": true },
+    { "type": "text", "id": "anchor_id", "label": "Anchor ID", "default": "about", "info": "Menu link /#about scrolls here." }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        { "type": "text", "id": "number", "label": "Number", "info": "Empty = 01, 02, 03 automatically." },
+        { "type": "text", "id": "title", "label": "Title", "default": "Timeless style" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "timeless designs for effortless everyday elegance" },
+        { "type": "checkbox", "id": "show_image", "label": "Show photo", "default": true },
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        { "type": "select", "id": "image_position", "label": "Photo position", "options": [{ "value": "below", "label": "Below the text" }, { "value": "above", "label": "Above the text" }], "default": "below" },
+        { "type": "range", "id": "image_width", "label": "Photo width (px @1440)", "min": 100, "max": 300, "step": 2, "default": 162 },
+        { "type": "range", "id": "image_height", "label": "Photo height (px @1440)", "min": 100, "max": 300, "step": 2, "default": 210 },
+        { "type": "range", "id": "offset", "label": "Offset from top (px @1440)", "min": 0, "max": 200, "step": 2, "default": 36 },
+        { "type": "range", "id": "parallax", "label": "Photo parallax (px)", "min": -100, "max": 100, "step": 5, "default": 30 }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Gapsy · About",
+      "blocks": [
+        { "type": "feature", "settings": { "title": "Timeless style", "text": "timeless designs for effortless everyday elegance", "image_position": "below", "image_width": 162, "image_height": 210, "offset": 36, "parallax": 30 } },
+        { "type": "feature", "settings": { "title": "Quality materials", "text": "premium materials for durability and beauty", "image_position": "above", "image_width": 164, "image_height": 246, "offset": 0, "parallax": -40 } },
+        { "type": "feature", "settings": { "title": "Smart function", "text": "designed for daily essentials and easy carrying", "image_position": "below", "image_width": 140, "image_height": 210, "offset": 36, "parallax": 50 } }
+      ]
+    }
+  ]
+}
+{% endschema %}
