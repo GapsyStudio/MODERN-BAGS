@@ -1,0 +1,137 @@
+{%- comment -%}
+  Gapsy · Contact (templates/page.contact.json).
+  Left: heading, intro (page content), contact blocks (label + text + optional link).
+  Right: Shopify contact form (name, email, phone, message) → messages arrive in the store email.
+  JS: assets/gapsy-pages.js ('contact') — own validation (required, email, phone ≥ 6 digits) before submit.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<section class="gapsy-section gapsy-contact gapsy-pad" data-gapsy-section="contact" style="--gapsy-pt: {{ s.padding_top | divided_by: 16.0 }}rem; --gapsy-pb: {{ s.padding_bottom | divided_by: 16.0 }}rem; --field-bg: {{ s.field_background }};">
+  <div class="gapsy-container">
+    {%- render 'gapsy-heading', text: s.heading, size: s.heading_size, em_size: s.em_size, size_mobile: s.heading_size_mobile, tag: 'h1' -%}
+
+    <div class="gapsy-contact__grid">
+      <div class="gapsy-contact__info">
+        {%- if page.content != blank -%}<div class="gapsy-rte" data-page-fade>{{ page.content }}</div>{%- endif -%}
+        <ul class="gapsy-contact__list" role="list">
+          {%- for block in section.blocks -%}
+            <li class="gapsy-contact__item" data-page-fade {{ block.shopify_attributes }}>
+              <p class="gapsy-contact__label">{{ block.settings.label }}</p>
+              {%- if block.settings.link != blank -%}
+                <a href="{{ block.settings.link }}" class="gapsy-contact__value gapsy-contact__value--link">{{ block.settings.text }}</a>
+              {%- else -%}
+                <p class="gapsy-contact__value">{{ block.settings.text }}</p>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      {%- form 'contact', id: 'GapsyContactForm', class: 'gapsy-contact__form' -%}
+        {%- if form.posted_successfully? -%}
+          <p class="gapsy-contact__success" role="status" tabindex="-1">{{ s.success_text }}</p>
+        {%- endif -%}
+        {%- if form.errors -%}
+          <p class="gapsy-contact__error-summary" role="alert">{{ form.errors | default_errors }}</p>
+        {%- endif -%}
+        <div class="gapsy-contact__row" data-page-fade>
+          <label class="gapsy-field">
+            <span class="gapsy-field__label">{{ s.name_label }} *</span>
+            <input type="text" name="contact[name]" autocomplete="name" required value="{{ form.name }}" data-field>
+            <span class="gapsy-field__error" data-error>{{ s.required_error }}</span>
+          </label>
+          <label class="gapsy-field">
+            <span class="gapsy-field__label">{{ s.email_label }} *</span>
+            <input type="email" name="contact[email]" autocomplete="email" required value="{{ form.email }}" data-field data-type="email">
+            <span class="gapsy-field__error" data-error>{{ s.email_error }}</span>
+          </label>
+        </div>
+        <label class="gapsy-field" data-page-fade>
+          <span class="gapsy-field__label">{{ s.phone_label }}</span>
+          <input type="tel" name="contact[phone]" autocomplete="tel" value="{{ form.phone }}" data-field data-type="phone">
+          <span class="gapsy-field__error" data-error>{{ s.phone_error }}</span>
+        </label>
+        <label class="gapsy-field" data-page-fade>
+          <span class="gapsy-field__label">{{ s.message_label }} *</span>
+          <textarea name="contact[body]" rows="6" required data-field>{{ form.body }}</textarea>
+          <span class="gapsy-field__error" data-error>{{ s.required_error }}</span>
+        </label>
+        <button type="submit" class="gapsy-btn gapsy-contact__submit" data-page-fade>
+          <span>{{ s.submit_label }}</span>
+          {%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-btn__icon' -%}
+        </button>
+      {%- endform -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .gapsy-contact__grid { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr); gap: 5rem; margin-top: 2.5rem; align-items: start; }
+  .gapsy-contact__info { display: flex; flex-direction: column; gap: 2.5rem; }
+  .gapsy-contact__list { display: grid; gap: 1.75rem; }
+  .gapsy-contact__label { font-size: 1rem; text-transform: uppercase; color: var(--gapsy-grey-80); opacity: 0.8; }
+  .gapsy-contact__value { margin-top: 0.25rem; font-family: var(--gapsy-font-condensed); font-weight: 600; font-size: 2.25rem; line-height: 1.15; text-transform: uppercase; }
+  .gapsy-contact__value--link { display: inline-block; }
+  .gapsy-contact__value--link:hover { color: var(--gapsy-primary); }
+  .gapsy-contact__form { display: flex; flex-direction: column; gap: 1.5rem; margin: 0; }
+  .gapsy-contact__row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .gapsy-contact__submit { align-self: flex-start; }
+  .gapsy-contact__success { padding: 1rem 1.5rem; border-radius: 1rem; background: var(--gapsy-black); color: var(--gapsy-white); }
+  .gapsy-contact__error-summary { color: var(--gapsy-primary); }
+  .gapsy-field { display: flex; flex-direction: column; gap: 0.5rem; }
+  .gapsy-field__label { font-size: 0.9375rem; text-transform: uppercase; color: var(--gapsy-grey-80); }
+  .gapsy-section .gapsy-field input, .gapsy-section .gapsy-field textarea {
+    width: 100%; padding: 1rem 1.25rem; border: 1px solid transparent; border-radius: 1rem; background: var(--field-bg, #ebebeb); box-shadow: none;
+    color: var(--gapsy-black); font: 400 1.125rem/1.4 var(--gapsy-font-sans); outline: none; transition: border-color 0.3s, background 0.3s;
+  }
+  .gapsy-section .gapsy-field textarea { resize: vertical; min-height: 10rem; }
+  .gapsy-section .gapsy-field input:focus, .gapsy-section .gapsy-field textarea:focus { border-color: var(--gapsy-black); background: var(--gapsy-white); }
+  .gapsy-field__error { display: none; font-size: 0.875rem; color: var(--gapsy-primary); }
+  .gapsy-field.is-invalid .gapsy-field__error { display: block; }
+  .gapsy-section .gapsy-field.is-invalid input, .gapsy-section .gapsy-field.is-invalid textarea { border-color: var(--gapsy-primary); }
+  @media (max-width: 991px) {
+    .gapsy-contact__grid { grid-template-columns: 1fr; gap: 3rem; margin-top: 1.5rem; }
+    .gapsy-contact__row { grid-template-columns: 1fr; }
+    .gapsy-contact__value { font-size: 1.75rem; }
+    .gapsy-contact__submit { align-self: stretch; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Gapsy · Contact",
+  "tag": "div",
+  "class": "gapsy-section-wrap",
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "<em>get in</em> touch" },
+    { "type": "range", "id": "heading_size", "label": "Heading size (px @1440)", "min": 40, "max": 200, "step": 2, "default": 110 },
+    { "type": "range", "id": "em_size", "label": "Italic words size (px @1440)", "min": 20, "max": 140, "step": 2, "default": 64 },
+    { "type": "range", "id": "heading_size_mobile", "label": "Heading size, mobile (px)", "min": 28, "max": 100, "step": 2, "default": 52 },
+    { "type": "header", "content": "Form" },
+    { "type": "text", "id": "name_label", "label": "Name label", "default": "Name" },
+    { "type": "text", "id": "email_label", "label": "Email label", "default": "Email" },
+    { "type": "text", "id": "phone_label", "label": "Phone label", "default": "Phone" },
+    { "type": "text", "id": "message_label", "label": "Message label", "default": "Message" },
+    { "type": "text", "id": "submit_label", "label": "Button label", "default": "Send message" },
+    { "type": "text", "id": "required_error", "label": "Error: required", "default": "Please fill in this field" },
+    { "type": "text", "id": "email_error", "label": "Error: email", "default": "Please enter a valid email" },
+    { "type": "text", "id": "phone_error", "label": "Error: phone", "default": "Please enter at least 6 digits" },
+    { "type": "text", "id": "success_text", "label": "Success message", "default": "Thank you! We will get back to you within 24 hours." },
+    { "type": "color", "id": "field_background", "label": "Field background", "default": "#ebebeb" },
+    { "type": "range", "id": "padding_top", "label": "Top padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 100 }
+  ],
+  "blocks": [
+    {
+      "type": "info",
+      "name": "Contact item",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Email" },
+        { "type": "text", "id": "text", "label": "Text", "default": "hello@modernbags.com" },
+        { "type": "url", "id": "link", "label": "Link", "info": "For email use mailto:…, for phone tel:…" }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [{ "name": "Gapsy · Contact" }]
+}
+{% endschema %}

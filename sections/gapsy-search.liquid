@@ -1,0 +1,92 @@
+{%- comment -%}
+  Gapsy · Search (templates/search.json, /search?q=…).
+  Search field, results: products as cards (same as the home page), pages/articles as a list.
+  Empty and "nothing found" states. Pagination. JS: assets/gapsy-pages.js ('collection' — card behaviour + reveals).
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<section class="gapsy-section gapsy-search gapsy-collection gapsy-pad" data-gapsy-section="collection" style="--gapsy-pt: {{ s.padding_top | divided_by: 16.0 }}rem; --gapsy-pb: {{ s.padding_bottom | divided_by: 16.0 }}rem; --card-h: {{ s.card_height | divided_by: 16.0 }}rem; --card-bg: {{ s.card_background }};">
+  <div class="gapsy-container">
+    {%- render 'gapsy-heading', text: s.heading, size: s.heading_size, em_size: s.em_size, size_mobile: s.heading_size_mobile, tag: 'h1' -%}
+
+    <form action="{{ routes.search_url }}" method="get" role="search" class="gapsy-search__form" data-collection-fade>
+      <label for="GapsySearch" class="gapsy-visually-hidden">{{ s.placeholder }}</label>
+      <input id="GapsySearch" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ s.placeholder | escape }}" autocomplete="off" class="gapsy-search__input">
+      <input type="hidden" name="options[prefix]" value="last">
+      <button type="submit" class="gapsy-search__submit" aria-label="{{ s.placeholder | escape }}">{%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-search__icon' -%}</button>
+    </form>
+
+    {%- if search.performed -%}
+      <p class="gapsy-search__count" data-collection-fade>{{ search.results_count }} {{ s.results_label }} “{{ search.terms }}”</p>
+      {%- paginate search.results by s.per_page -%}
+        {%- if search.results_count > 0 -%}
+          <ul class="gapsy-collection__grid" role="list">
+            {%- for item in search.results -%}
+              {%- if item.object_type == 'product' -%}
+                <li class="gapsy-collection__item" data-product-item>{%- render 'gapsy-product-card', product: item, sizes: '(min-width: 992px) 31vw, 50vw' -%}</li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+          <ul class="gapsy-search__other" role="list">
+            {%- for item in search.results -%}
+              {%- unless item.object_type == 'product' -%}
+                <li data-product-item><a href="{{ item.url }}" class="gapsy-search__other-link"><span>{{ item.title }}</span>{%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-search__icon' -%}</a></li>
+              {%- endunless -%}
+            {%- endfor -%}
+          </ul>
+        {%- else -%}
+          <div class="gapsy-collection__empty" data-collection-fade>
+            <p>{{ s.empty_text }}</p>
+            <a href="{{ routes.all_products_collection_url }}" class="gapsy-link"><span class="gapsy-link__label">{{ s.all_label }}</span>{%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-link__icon' -%}</a>
+          </div>
+        {%- endif -%}
+        {%- if paginate.pages > 1 -%}
+          <nav class="gapsy-pagination" aria-label="Pagination">
+            {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}" aria-label="Previous page">←</a>{%- endif -%}
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}<a href="{{ part.url }}">{{ part.title }}</a>{%- elsif part.title == paginate.current_page -%}<span class="is-current" aria-current="page">{{ part.title }}</span>{%- else -%}<span>{{ part.title }}</span>{%- endif -%}
+            {%- endfor -%}
+            {%- if paginate.next -%}<a href="{{ paginate.next.url }}" aria-label="Next page">→</a>{%- endif -%}
+          </nav>
+        {%- endif -%}
+      {%- endpaginate -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .gapsy-search__form { display: flex; align-items: center; gap: 1rem; max-width: 50rem; margin-top: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--gapsy-black); }
+  .gapsy-section .gapsy-search__input { flex: 1; min-width: 0; padding: 0; border: 0; border-radius: 0; background: transparent !important; box-shadow: none; outline: none; font: 600 2.5rem/1.2 var(--gapsy-font-condensed); text-transform: uppercase; color: inherit; -webkit-appearance: none; appearance: none; }
+  .gapsy-search__input::placeholder { color: rgba(0, 0, 0, 0.35); }
+  .gapsy-search__submit { display: flex; padding: 0; border: 0; background: none; cursor: pointer; color: inherit; }
+  .gapsy-search__icon { width: 2rem; height: 2rem; transition: transform 0.5s var(--gapsy-ease); }
+  .gapsy-search__submit:hover .gapsy-search__icon { transform: rotate(45deg); }
+  .gapsy-search__count { margin-top: 1.5rem; font-size: 1rem; color: var(--gapsy-grey-80); }
+  .gapsy-search__other { display: grid; margin-top: 3rem; }
+  .gapsy-search__other:empty { display: none; }
+  .gapsy-search__other-link { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 0; border-top: 1px solid rgba(0, 0, 0, 0.12); font-family: var(--gapsy-font-condensed); font-weight: 600; font-size: 2rem; text-transform: uppercase; }
+  .gapsy-search__other-link:hover { color: var(--gapsy-primary); }
+  @media (max-width: 991px) { .gapsy-section .gapsy-search__input { font-size: 1.75rem; } .gapsy-search__icon { width: 1.5rem; height: 1.5rem; } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Gapsy · Search",
+  "tag": "div",
+  "class": "gapsy-section-wrap",
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "<em>find your</em> bag" },
+    { "type": "range", "id": "heading_size", "label": "Heading size (px @1440)", "min": 40, "max": 200, "step": 2, "default": 110 },
+    { "type": "range", "id": "em_size", "label": "Italic words size (px @1440)", "min": 20, "max": 140, "step": 2, "default": 64 },
+    { "type": "range", "id": "heading_size_mobile", "label": "Heading size, mobile (px)", "min": 28, "max": 100, "step": 2, "default": 52 },
+    { "type": "text", "id": "placeholder", "label": "Placeholder", "default": "Search bags" },
+    { "type": "text", "id": "results_label", "label": "Results label", "default": "results for" },
+    { "type": "text", "id": "empty_text", "label": "Nothing found text", "default": "Nothing found. Try another word or browse all bags." },
+    { "type": "text", "id": "all_label", "label": "All products link label", "default": "All bags" },
+    { "type": "range", "id": "per_page", "label": "Results per page", "min": 6, "max": 36, "step": 3, "default": 12 },
+    { "type": "range", "id": "card_height", "label": "Card photo height (px @1440)", "min": 240, "max": 700, "step": 5, "default": 440 },
+    { "type": "color", "id": "card_background", "label": "Card background", "default": "#ebebeb" },
+    { "type": "range", "id": "padding_top", "label": "Top padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 100 }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,47 @@
+{%- comment -%}
+  Gapsy · Page (templates/page.json) — text pages: About, Shipping, Size guide…
+  Heading = italic prefix + page title, optional cover image, page content from Online Store → Pages.
+  JS: assets/gapsy-pages.js ('page' — heading letters + fade).
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<section class="gapsy-section gapsy-page gapsy-pad" data-gapsy-section="page" style="--gapsy-pt: {{ s.padding_top | divided_by: 16.0 }}rem; --gapsy-pb: {{ s.padding_bottom | divided_by: 16.0 }}rem;">
+  <div class="gapsy-container">
+    {%- capture heading -%}{% if s.heading_prefix != blank %}<em>{{ s.heading_prefix }}</em> {% endif %}{{ page.title }}{%- endcapture -%}
+    {%- render 'gapsy-heading', text: heading, size: s.heading_size, em_size: s.em_size, size_mobile: s.heading_size_mobile, tag: 'h1' -%}
+    <div class="gapsy-page__body">
+      {%- if s.image != blank -%}
+        <div class="gapsy-media gapsy-page__image" data-page-fade>{%- render 'gapsy-image', image: s.image, sizes: '(min-width: 992px) 40vw, 100vw' -%}</div>
+      {%- endif -%}
+      <div class="gapsy-rte gapsy-page__content" data-page-fade>{{ page.content }}</div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .gapsy-page__body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 3rem; margin-top: 2rem; }
+  .gapsy-page__body:has(.gapsy-page__image) { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr); align-items: start; }
+  .gapsy-page__image { aspect-ratio: 4 / 5; background: var(--gapsy-surface); }
+  .gapsy-page__content { max-width: 46rem; font-size: 1.1875rem; }
+  .gapsy-page__content h2, .gapsy-page__content h3 { margin-top: 1.5em; font-family: var(--gapsy-font-condensed); font-weight: 600; font-size: 2rem; line-height: 1.2; text-transform: uppercase; color: var(--gapsy-black); }
+  @media (max-width: 991px) {
+    .gapsy-page__body, .gapsy-page__body:has(.gapsy-page__image) { grid-template-columns: 1fr; gap: 2rem; margin-top: 1.5rem; }
+    .gapsy-page__content { font-size: 1rem; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Gapsy · Page",
+  "tag": "div",
+  "class": "gapsy-section-wrap",
+  "settings": [
+    { "type": "text", "id": "heading_prefix", "label": "Italic word before the title", "default": "about" },
+    { "type": "range", "id": "heading_size", "label": "Heading size (px @1440)", "min": 40, "max": 200, "step": 2, "default": 110 },
+    { "type": "range", "id": "em_size", "label": "Italic word size (px @1440)", "min": 20, "max": 140, "step": 2, "default": 64 },
+    { "type": "range", "id": "heading_size_mobile", "label": "Heading size, mobile (px)", "min": 28, "max": 100, "step": 2, "default": 52 },
+    { "type": "image_picker", "id": "image", "label": "Image next to the text" },
+    { "type": "range", "id": "padding_top", "label": "Top padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 100 }
+  ]
+}
+{% endschema %}

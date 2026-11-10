@@ -1,0 +1,63 @@
+{%- comment -%}
+  Gapsy · All collections (templates/list-collections.json, /collections).
+  Every collection as a rounded "pill" card (like the home page categories) with its image and title.
+  Hidden: the handles listed in "Hide collections". JS: assets/gapsy-pages.js ('page').
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign hidden = s.hide_handles | remove: ' ' | split: ','
+-%}
+<section class="gapsy-section gapsy-colls gapsy-pad" data-gapsy-section="page" style="--gapsy-pt: {{ s.padding_top | divided_by: 16.0 }}rem; --gapsy-pb: {{ s.padding_bottom | divided_by: 16.0 }}rem; --card-bg: {{ s.card_background }};">
+  <div class="gapsy-container">
+    {%- render 'gapsy-heading', text: s.heading, size: s.heading_size, em_size: s.em_size, size_mobile: s.heading_size_mobile, tag: 'h1' -%}
+    <ul class="gapsy-colls__grid" role="list">
+      {%- for c in collections -%}
+        {%- if hidden contains c.handle -%}{%- continue -%}{%- endif -%}
+        <li data-page-fade>
+          <a href="{{ c.url }}" class="gapsy-colls__card">
+            <span class="gapsy-colls__pill">
+              {%- render 'gapsy-image', image: c.featured_image, sizes: '(min-width: 992px) 31vw, 50vw', alt: c.title -%}
+            </span>
+            <span class="gapsy-colls__name">{{ c.title }}{%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-colls__arrow' -%}</span>
+            <span class="gapsy-colls__count">{{ c.products_count }} {{ s.count_label }}</span>
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+
+{% stylesheet %}
+  .gapsy-colls__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3rem 1.25rem; margin-top: 2.5rem; }
+  .gapsy-colls__card { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
+  .gapsy-colls__pill { display: block; width: 100%; aspect-ratio: 440 / 580; border-radius: 999px; overflow: hidden; background: var(--card-bg, #d6d6d6); margin-bottom: 0.75rem; }
+  .gapsy-colls__pill img, .gapsy-colls__pill svg { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform 1.1s var(--gapsy-ease); }
+  .gapsy-colls__name { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--gapsy-font-condensed); font-weight: 600; font-size: 2.5rem; line-height: 1.1; text-transform: uppercase; }
+  .gapsy-colls__arrow { width: 2.25rem; height: 2.25rem; transition: transform 0.5s var(--gapsy-ease); }
+  .gapsy-colls__count { font-size: 0.9375rem; color: var(--gapsy-grey-80); }
+  @media (hover: hover) { .gapsy-colls__card:hover img { transform: scale(1.06); } .gapsy-colls__card:hover .gapsy-colls__arrow { transform: rotate(45deg); } }
+  @media (max-width: 991px) {
+    .gapsy-colls__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 0.75rem; }
+    .gapsy-colls__name { font-size: 1.5rem; }
+    .gapsy-colls__arrow { width: 1.25rem; height: 1.25rem; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Gapsy · Collections",
+  "tag": "div",
+  "class": "gapsy-section-wrap",
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "<em>all</em> collections" },
+    { "type": "range", "id": "heading_size", "label": "Heading size (px @1440)", "min": 40, "max": 200, "step": 2, "default": 110 },
+    { "type": "range", "id": "em_size", "label": "Italic words size (px @1440)", "min": 20, "max": 140, "step": 2, "default": 64 },
+    { "type": "range", "id": "heading_size_mobile", "label": "Heading size, mobile (px)", "min": 28, "max": 100, "step": 2, "default": 52 },
+    { "type": "text", "id": "hide_handles", "label": "Hide collections (handles, comma separated)", "default": "frontpage" },
+    { "type": "text", "id": "count_label", "label": "Products count label", "default": "bags" },
+    { "type": "color", "id": "card_background", "label": "Card background", "default": "#d6d6d6" },
+    { "type": "range", "id": "padding_top", "label": "Top padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 100 }
+  ]
+}
+{% endschema %}

@@ -175,4 +175,40 @@
     }
     return () => { off.forEach((f) => f()); clearTimeout(t); };
   });
+  /* ---------------- Simple pages: page, 404, all collections ---------------- */
+  const revealPage = (el) => {
+    el.querySelectorAll('[data-reveal-heading]').forEach((h) => Gapsy.revealHeading(h, { start: 'top 100%' }));
+    Gapsy.revealUp(el.querySelectorAll('[data-page-fade]'), { start: 'top 95%', stagger: 0.07 });
+  };
+  Gapsy.register('page', (el, { reduce }) => { if (!reduce) revealPage(el); });
+
+  /* ---------------- Contact: validation before the Shopify form submits ---------------- */
+  Gapsy.register('contact', (el, { reduce }) => {
+    if (!reduce) revealPage(el);
+    const form = el.querySelector('form');
+    if (!form) return;
+    form.setAttribute('novalidate', '');
+    const check = (input) => {
+      const v = input.value.trim();
+      let ok = true;
+      if (input.required && !v) ok = false;
+      else if (v && input.dataset.type === 'email') ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+      else if (v && input.dataset.type === 'phone') ok = v.replace(/\D/g, '').length >= 6;
+      const field = input.closest('.gapsy-field');
+      field.classList.toggle('is-invalid', !ok);
+      input.setAttribute('aria-invalid', String(!ok));
+      return ok;
+    };
+    const inputs = [...form.querySelectorAll('[data-field]')];
+    const onSubmit = (e) => {
+      const bad = inputs.filter((i) => !check(i));
+      if (bad.length) { e.preventDefault(); e.stopImmediatePropagation(); bad[0].focus(); }
+    };
+    const onInput = (e) => { if (e.target.closest('.gapsy-field.is-invalid')) check(e.target); };
+    form.addEventListener('submit', onSubmit, true);
+    form.addEventListener('input', onInput);
+    const success = el.querySelector('.gapsy-contact__success');
+    if (success) success.focus();
+    return () => { form.removeEventListener('submit', onSubmit, true); form.removeEventListener('input', onInput); };
+  });
 })();

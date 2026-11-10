@@ -1,0 +1,50 @@
+{%- comment -%}
+  Gapsy · 404 (templates/404.json) — huge gradient "404" that fits the width, heading, text, button.
+  The number is sized in vw, so it scales with the screen. JS: assets/gapsy-pages.js ('page').
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<section class="gapsy-section gapsy-404 gapsy-pad" data-gapsy-section="page" style="--gapsy-pt: {{ s.padding_top | divided_by: 16.0 }}rem; --gapsy-pb: {{ s.padding_bottom | divided_by: 16.0 }}rem; background: {{ s.background }}; color: {{ s.text_color }};">
+  <div class="gapsy-container gapsy-404__inner">
+    <p class="gapsy-404__number" aria-hidden="true" data-reveal-heading>{{ s.number }}</p>
+    {%- render 'gapsy-heading', text: s.heading, size: s.heading_size, em_size: s.em_size, size_mobile: s.heading_size_mobile, tag: 'h1', align: 'center' -%}
+    {%- if s.text != blank -%}<p class="gapsy-404__text" data-page-fade>{{ s.text }}</p>{%- endif -%}
+    <a href="{{ s.button_url | default: routes.all_products_collection_url }}" class="gapsy-btn" data-page-fade>
+      <span>{{ s.button_label }}</span>
+      {%- render 'gapsy-icon', icon: 'arrow', class: 'gapsy-btn__icon' -%}
+    </a>
+  </div>
+</section>
+
+{% stylesheet %}
+  .gapsy-404__inner { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .gapsy-404__number {
+    font-family: var(--gapsy-font-display); font-size: min(34vw, 40rem); line-height: 0.9; letter-spacing: -0.01em;
+    background: linear-gradient(180deg, var(--gapsy-text-grad-from), var(--gapsy-grad-from)); -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .gapsy-404__number .gapsy-mask > span { background: linear-gradient(180deg, var(--gapsy-text-grad-from), var(--gapsy-grad-from)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .gapsy-404__text { max-width: 32rem; margin-top: 0.5rem; font-size: 1.1875rem; line-height: 1.55; color: var(--gapsy-grey-80); }
+  .gapsy-404 .gapsy-btn { margin-top: 2.5rem; }
+  @media (max-width: 991px) { .gapsy-404__text { font-size: 1rem; } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Gapsy · 404",
+  "tag": "div",
+  "class": "gapsy-section-wrap",
+  "settings": [
+    { "type": "text", "id": "number", "label": "Big number", "default": "404" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "<em>oops,</em> page not found" },
+    { "type": "range", "id": "heading_size", "label": "Heading size (px @1440)", "min": 40, "max": 200, "step": 2, "default": 80 },
+    { "type": "range", "id": "em_size", "label": "Italic words size (px @1440)", "min": 20, "max": 140, "step": 2, "default": 48 },
+    { "type": "range", "id": "heading_size_mobile", "label": "Heading size, mobile (px)", "min": 28, "max": 100, "step": 2, "default": 40 },
+    { "type": "text", "id": "text", "label": "Text", "default": "The page you are looking for has moved or never existed. Let's find you a bag instead." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Back to shop" },
+    { "type": "url", "id": "button_url", "label": "Button link", "info": "Empty = all products." },
+    { "type": "color", "id": "background", "label": "Background", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#000000" },
+    { "type": "range", "id": "padding_top", "label": "Top padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 100 }
+  ]
+}
+{% endschema %}
