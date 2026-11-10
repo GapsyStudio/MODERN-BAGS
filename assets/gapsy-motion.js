@@ -1,7 +1,7 @@
 // @ts-nocheck
 /*
   Gapsy · Modern Bags — animation core.
-  - Registers GSAP + ScrollTrigger + SplitText, starts Lenis smooth scroll on the real scroller
+  - Registers GSAP + ScrollTrigger (text is split by Gapsy.split, no SplitText needed), starts Lenis smooth scroll on the real scroller
     (Horizon scrolls `.page-wrapper` on desktop ≥990px, `window` on mobile).
   - Each section script calls Gapsy.register('name', (el, { desktop, mobile, reduce }) => cleanup).
     Sections are mounted with gsap.matchMedia, re-mounted in the theme editor on section:load.

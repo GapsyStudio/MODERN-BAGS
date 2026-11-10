@@ -155,5 +155,5 @@
 
   window.Gapsy = window.Gapsy || {};
   Gapsy.cart = { open, close, refresh };
-  refresh();
+  refresh().catch(() => {});
 })();

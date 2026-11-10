@@ -43,6 +43,11 @@
     </nav>
 
     <div class="gapsy-header__actions">
+      {%- if section.settings.show_search -%}
+        <a href="{{ routes.search_url }}" class="gapsy-header__search" aria-label="{{ section.settings.search_label | escape }}" data-header-item data-magnetic="0.3">
+          {%- render 'gapsy-icon', icon: 'search', class: 'gapsy-header__search-icon' -%}
+        </a>
+      {%- endif -%}
       {%- if section.settings.cta_label != blank -%}
         <a href="{{ section.settings.cta_url | default: routes.all_products_collection_url }}" class="gapsy-link gapsy-header__cta" data-header-item data-magnetic="0.25">
           <span class="gapsy-link__label">{{ section.settings.cta_label }}</span>
@@ -109,6 +114,9 @@
   .gapsy-header__avatar { display: block; width: 3rem; height: 3rem; border-radius: 50%; border: 1px solid var(--gapsy-text-grad-to); overflow: hidden; flex: none; }
   .gapsy-header__avatar img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
   .gapsy-header__avatar-fallback { display: block; width: 100%; height: 100%; background: var(--gapsy-text-gradient); }
+  .gapsy-header__search { display: flex; align-items: center; justify-content: center; width: 3rem; height: 3rem; border-radius: 50%; transition: background 0.3s, color 0.3s; }
+  .gapsy-header__search:hover { background: var(--gapsy-black); color: var(--gapsy-white); }
+  .gapsy-header__search-icon { width: 1.5rem; height: 1.5rem; }
   .gapsy-header__m-cart, .gapsy-header__burger { display: none; }
   .gapsy-header__menu[hidden] { display: none; }
 
@@ -116,6 +124,7 @@
     .gapsy-header { padding-top: 1rem; padding-bottom: 0.5rem; }
     .gapsy-header__bar { grid-template-columns: 1fr auto; }
     .gapsy-header__nav, .gapsy-header__cta, .gapsy-header__avatar { display: none; }
+    .gapsy-header__search { width: 2.75rem; height: 2.75rem; }
     .gapsy-header__logo { font-size: 1.375rem; position: relative; z-index: 2; }
     .gapsy-header__actions { position: relative; z-index: 2; gap: 0.5rem; }
     .gapsy-header__m-cart { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.875rem; font-weight: 500; padding: 0.5rem; }
@@ -149,6 +158,8 @@
     { "type": "range", "id": "nav_size", "label": "Menu text size (px @1440)", "min": 12, "max": 24, "step": 1, "default": 18 },
     { "type": "checkbox", "id": "show_cart", "label": "Show \"Cart (n)\" in menu", "default": true },
     { "type": "text", "id": "cart_label", "label": "Cart label", "default": "Cart" },
+    { "type": "checkbox", "id": "show_search", "label": "Show search icon", "default": true },
+    { "type": "text", "id": "search_label", "label": "Search accessible label", "default": "Search" },
     { "type": "header", "content": "Call to action" },
     { "type": "text", "id": "cta_label", "label": "Button label", "default": "Start shopping" },
     { "type": "url", "id": "cta_url", "label": "Button link", "info": "Empty = all products." },

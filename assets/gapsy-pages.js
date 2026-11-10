@@ -49,6 +49,8 @@
     const compareEl = el.querySelector('[data-product-compare]');
     const errorEl = el.querySelector('[data-product-error]');
     const toast = el.querySelector('[data-product-toast]');
+    const barPrice = el.querySelector('[data-product-bar-price]');
+    const barBtn = el.querySelector('[data-product-bar-add]');
     const track = el.querySelector('[data-product-track]');
     const slides = [...el.querySelectorAll('[data-product-slide]')];
     const indexEl = el.querySelector('[data-product-index]');
@@ -87,6 +89,8 @@
       addBtn.disabled = !variant.available;
       addLabel.textContent = variant.available ? labels.add : labels.soldOut;
       priceEl.textContent = money(variant.price, moneyFormat);
+      if (barPrice) barPrice.textContent = priceEl.textContent;
+      if (barBtn) barBtn.disabled = !variant.available;
       if (compareEl) {
         compareEl.hidden = !(variant.compare_at_price > variant.price);
         compareEl.textContent = variant.compare_at_price ? money(variant.compare_at_price, moneyFormat) : '';
@@ -134,6 +138,18 @@
           img.style.transformOrigin = `${((e.clientX - r.left) / r.width) * 100}% ${((e.clientY - r.top) / r.height) * 100}%`;
         });
       });
+    }
+
+    // mobile sticky add-to-cart bar: visible while the main button is off screen
+    const bar = el.querySelector('[data-product-bar]');
+    if (bar && window.IntersectionObserver) {
+      const io = new IntersectionObserver(([e]) => {
+        const below = e.boundingClientRect.top < 0;
+        bar.classList.toggle('is-visible', !e.isIntersecting && below);
+      });
+      io.observe(addBtn);
+      off.push(() => io.disconnect());
+      on(barBtn, 'click', () => (form.requestSubmit ? form.requestSubmit() : addBtn.click()));
     }
 
     // mobile gallery counter

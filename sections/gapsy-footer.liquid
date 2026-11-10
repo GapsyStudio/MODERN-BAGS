@@ -16,6 +16,7 @@
 <div
   class="gapsy-section gapsy-footer gapsy-pad"
   data-gapsy-section="footer"
+  data-wave="{{ s.wordmark_wave }}"
   style="--gapsy-pt: {{ s.padding_top | divided_by: 16.0 }}rem; --gapsy-pb: {{ s.padding_bottom | divided_by: 16.0 }}rem; --wm-from: {{ s.wordmark_from }}; --wm-mid: {{ s.wordmark_mid }}; --wm-to: {{ s.wordmark_to }}; background: {{ s.background }}; color: {{ s.text_color }};"
 >
   <div class="gapsy-container">
@@ -115,6 +116,7 @@
     margin: 4rem 0 0; font-family: var(--gapsy-font-display); font-size: calc((min(100vw, 120rem) - 2 * var(--gapsy-gutter)) / 5.3); line-height: 1; white-space: nowrap; text-transform: uppercase; text-align: center;
     background: linear-gradient(180deg, var(--wm-from) 42%, var(--wm-mid) 85%, var(--wm-to) 100%); -webkit-background-clip: text; background-clip: text; color: transparent;
   }
+  .gapsy-footer__wordmark.is-revealed .gapsy-mask { overflow: visible; }
   .gapsy-footer__wordmark .gapsy-mask > span { background: inherit; -webkit-background-clip: text; background-clip: text; color: transparent; background-image: linear-gradient(180deg, var(--wm-from) 42%, var(--wm-mid) 85%, var(--wm-to) 100%); }
   .gapsy-footer__bottom { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; margin-top: 4rem; }
   .gapsy-footer__copy { font-size: 1.125rem; }
@@ -152,6 +154,7 @@
     { "type": "text", "id": "success_text", "label": "Success message", "default": "Thanks for subscribing!" },
     { "type": "header", "content": "Wordmark" },
     { "type": "text", "id": "wordmark", "label": "Big wordmark", "default": "MODERN BAGS", "info": "Empty = store name. Fits the width automatically." },
+    { "type": "checkbox", "id": "wordmark_wave", "label": "Letters react to the cursor", "default": true },
     { "type": "color", "id": "wordmark_from", "label": "Wordmark gradient, top", "default": "#ffffff" },
     { "type": "color", "id": "wordmark_mid", "label": "Wordmark gradient, middle", "default": "#ffb87e" },
     { "type": "color", "id": "wordmark_to", "label": "Wordmark gradient, bottom", "default": "#ff9e76" },

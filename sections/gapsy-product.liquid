@@ -145,11 +145,24 @@
     </div>
   </div>
 
+  {%- if s.sticky_bar -%}
+    <div class="gapsy-product__bar" data-product-bar>
+      <div class="gapsy-product__bar-info">
+        <p class="gapsy-product__bar-title">{{ product.title }}</p>
+        <p class="gapsy-product__bar-price" data-product-bar-price>{{ current.price | money }}</p>
+      </div>
+      <button type="button" class="gapsy-btn gapsy-product__bar-btn" data-product-bar-add tabindex="-1" {% unless current.available %}disabled{% endunless %}>
+        <span>{{ s.add_label }}</span>
+      </button>
+    </div>
+  {%- endif -%}
+
   <div class="gapsy-toast" role="status" aria-live="polite" data-product-toast>
     <span>{{ s.added_text }}</span>
     <a href="{{ routes.cart_url }}">{{ s.view_cart_label }}</a>
   </div>
 
+  <script type="application/ld+json">{{ product | structured_data }}</script>
   <script type="application/json" data-product-json>{{ product | json }}</script>
   <script type="application/json" data-money-format>{{ shop.money_format | json }}</script>
 </section>
@@ -190,6 +203,15 @@
   .gapsy-product__error { color: var(--gapsy-primary); font-size: 0.9375rem; }
   .gapsy-product__accs { margin-top: 1rem; }
   .gapsy-product .gapsy-toast { position: fixed; }
+  .gapsy-product__bar { display: none; }
+  @media (max-width: 991px) {
+    .gapsy-product__bar { position: fixed; z-index: 60; left: 0.75rem; right: 0.75rem; bottom: 0.75rem; display: flex; align-items: center; gap: 1rem; padding: 0.625rem 0.625rem 0.625rem 1.25rem; border-radius: 999px; background: var(--gapsy-white); box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.15); transform: translateY(150%); transition: transform 0.6s var(--gapsy-ease); }
+    .gapsy-product__bar.is-visible { transform: none; }
+    .gapsy-product__bar-info { flex: 1; min-width: 0; }
+    .gapsy-product__bar-title { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-family: var(--gapsy-font-condensed); font-weight: 600; font-size: 1.25rem; line-height: 1.1; text-transform: uppercase; }
+    .gapsy-product__bar-price { font-family: var(--gapsy-font-condensed); font-weight: 700; font-size: 1.25rem; line-height: 1.1; }
+    .gapsy-product__bar-btn { min-height: 3rem; padding: 0 1.25rem; font-size: 1.375rem; }
+  }
 
   @media (max-width: 991px) {
     .gapsy-product__grid { grid-template-columns: 1fr; gap: 1.5rem; padding-top: 0.5rem; }
@@ -219,6 +241,7 @@
     { "type": "text", "id": "add_label", "label": "Add to cart label", "default": "Add to cart" },
     { "type": "text", "id": "sold_out_label", "label": "Sold out label", "default": "Sold out" },
     { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show \"Buy it now\" buttons", "default": false },
+    { "type": "checkbox", "id": "sticky_bar", "label": "Sticky add to cart bar on mobile", "default": true },
     { "type": "checkbox", "id": "show_tax_note", "label": "Show note under price", "default": true },
     { "type": "text", "id": "tax_note", "label": "Note under price", "default": "Taxes included. Shipping calculated at checkout." },
     { "type": "text", "id": "added_text", "label": "Toast: added text", "default": "Added to your cart" },

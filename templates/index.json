@@ -144,6 +144,54 @@
     "trendy": {
       "type": "gapsy-trendy",
       "settings": {}
+    },
+    "marquee": {
+      "type": "gapsy-marquee",
+      "blocks": {
+        "m1": {
+          "type": "word",
+          "settings": {
+            "text": "Timeless",
+            "style": "solid"
+          }
+        },
+        "m2": {
+          "type": "word",
+          "settings": {
+            "text": "quality",
+            "style": "italic"
+          }
+        },
+        "m3": {
+          "type": "word",
+          "settings": {
+            "text": "Everyday",
+            "style": "gradient"
+          }
+        },
+        "m4": {
+          "type": "word",
+          "settings": {
+            "text": "Statement",
+            "style": "outline"
+          }
+        },
+        "m5": {
+          "type": "word",
+          "settings": {
+            "text": "crafted",
+            "style": "italic"
+          }
+        }
+      },
+      "block_order": [
+        "m1",
+        "m2",
+        "m3",
+        "m4",
+        "m5"
+      ],
+      "settings": {}
     }
   },
   "order": [
@@ -152,6 +200,7 @@
     "categories",
     "love",
     "products",
+    "marquee",
     "trendy"
   ]
 }

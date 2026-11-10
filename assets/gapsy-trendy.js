@@ -18,9 +18,10 @@
 
     // Square grows from its own rect to the top-left corner.
     if (el.dataset.grow === 'true') {
+      const cs = getComputedStyle(el);
       gsap.fromTo(clips,
-        { clipPath: 'inset(17.49% 26.74% 6.88% 26.74%)' },
-        { clipPath: 'inset(0% 26.74% 6.88% 0%)', ease: 'power2.inOut',
+        { clipPath: cs.getPropertyValue('--clip').trim() || 'inset(17.49% 26.74% 6.88% 26.74%)' },
+        { clipPath: cs.getPropertyValue('--clip-to').trim() || 'inset(0% 26.74% 6.88% 0%)', ease: 'power2.inOut',
           scrollTrigger: { trigger: stage, start: 'top 45%', end: 'bottom 85%', scrub: 0.6 } });
     }
   });

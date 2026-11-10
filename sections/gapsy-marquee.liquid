@@ -1,0 +1,101 @@
+{%- comment -%}
+  Gapsy · Marquee — an endless line of big words (and small photos) that runs sideways,
+  speeds up with the scroll speed and turns around when you scroll up.
+  Data: blocks "Word" (style: solid / outline / gradient / italic) and "Photo"; separator; speed; colours.
+  JS: assets/gapsy-marquee.js. Reduced motion: the line stands still.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- capture group -%}
+  {%- for block in section.blocks -%}
+    {%- case block.type -%}
+      {%- when 'word' -%}
+        <span class="gapsy-marquee__word gapsy-marquee__word--{{ block.settings.style }}" {{ block.shopify_attributes }}>{{ block.settings.text }}</span>
+      {%- when 'photo' -%}
+        <span class="gapsy-marquee__photo" {{ block.shopify_attributes }}>{%- render 'gapsy-image', image: block.settings.image, sizes: '12vw', alt: '' -%}</span>
+    {%- endcase -%}
+    {%- if s.separator != blank -%}<span class="gapsy-marquee__sep" aria-hidden="true">{{ s.separator }}</span>{%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+<section
+  class="gapsy-section gapsy-marquee"
+  data-gapsy-section="marquee"
+  data-speed="{{ s.speed }}"
+  data-direction="{{ s.direction }}"
+  data-scroll="{{ s.react_to_scroll }}"
+  style="--mq-size: {{ s.size | divided_by: 16.0 }}rem; --mq-size-m: {{ s.size_mobile | divided_by: 16.0 }}rem; --gapsy-pt: {{ s.padding_top | divided_by: 16.0 }}rem; --gapsy-pb: {{ s.padding_bottom | divided_by: 16.0 }}rem; background: {{ s.background }}; color: {{ s.text_color }};{% if s.border %} border-block: 1px solid currentColor;{% endif %}"
+>
+  {%- if s.label != blank -%}<h2 class="gapsy-visually-hidden">{{ s.label }}</h2>{%- endif -%}
+  <div class="gapsy-marquee__viewport{% if s.tilt != 0 %} gapsy-marquee__viewport--tilt{% endif %}" style="--tilt: {{ s.tilt }}deg;">
+    <div class="gapsy-marquee__track" data-marquee-track>
+      <div class="gapsy-marquee__group" data-marquee-group>{{ group }}</div>
+      <div class="gapsy-marquee__group" aria-hidden="true">{{ group }}</div>
+      <div class="gapsy-marquee__group" aria-hidden="true">{{ group }}</div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .gapsy-marquee { padding-top: var(--gapsy-pt, 2rem); padding-bottom: var(--gapsy-pb, 2rem); overflow: clip; }
+  .gapsy-marquee__viewport { overflow: hidden; }
+  .gapsy-marquee__viewport--tilt { transform: rotate(var(--tilt)); margin-inline: -2rem; }
+  .gapsy-marquee__track { display: flex; width: max-content; will-change: transform; }
+  .gapsy-marquee__group { display: flex; align-items: center; flex: none; }
+  .gapsy-marquee__word { padding-inline: 1.5rem; font-family: var(--gapsy-font-display); font-size: var(--mq-size); line-height: 1.15; text-transform: uppercase; white-space: nowrap; }
+  .gapsy-marquee__word--outline { color: transparent; -webkit-text-stroke: 1.5px currentColor; }
+  .gapsy-marquee__word--gradient { background: var(--gapsy-text-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .gapsy-marquee__word--italic { font-family: var(--gapsy-font-serif); font-style: italic; font-size: calc(var(--mq-size) * 0.62); text-transform: none; }
+  .gapsy-marquee__sep { font-family: var(--gapsy-font-display); font-size: calc(var(--mq-size) * 0.45); line-height: 1; color: var(--gapsy-primary); }
+  .gapsy-marquee__photo { display: block; width: calc(var(--mq-size) * 1.1); height: calc(var(--mq-size) * 0.9); margin-inline: 1.5rem; overflow: hidden; border-radius: 999px; background: var(--gapsy-surface); }
+  .gapsy-marquee__photo img, .gapsy-marquee__photo svg { width: 100%; height: 100%; object-fit: cover; }
+  @media (max-width: 991px) {
+    .gapsy-marquee { --mq-size: var(--mq-size-m); }
+    .gapsy-marquee__word { padding-inline: 0.75rem; }
+    .gapsy-marquee__photo { margin-inline: 0.75rem; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Gapsy · Marquee",
+  "tag": "div",
+  "class": "gapsy-section-wrap",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Accessible label", "default": "Our values", "info": "Read by screen readers only." },
+    { "type": "text", "id": "separator", "label": "Separator", "default": "✦" },
+    { "type": "range", "id": "size", "label": "Text size (px @1440)", "min": 40, "max": 240, "step": 4, "default": 128 },
+    { "type": "range", "id": "size_mobile", "label": "Text size, mobile (px)", "min": 24, "max": 120, "step": 2, "default": 56 },
+    { "type": "range", "id": "speed", "label": "Speed", "min": 10, "max": 200, "step": 5, "default": 60 },
+    { "type": "select", "id": "direction", "label": "Direction", "options": [{ "value": "left", "label": "Left" }, { "value": "right", "label": "Right" }], "default": "left" },
+    { "type": "checkbox", "id": "react_to_scroll", "label": "Speed up with scroll, turn on scroll up", "default": true },
+    { "type": "range", "id": "tilt", "label": "Tilt (degrees)", "min": -6, "max": 6, "step": 1, "default": 0 },
+    { "type": "checkbox", "id": "border", "label": "Lines above and below", "default": false },
+    { "type": "color", "id": "background", "label": "Background", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#000000" },
+    { "type": "range", "id": "padding_top", "label": "Top padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 32 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding (px @1440)", "min": 0, "max": 200, "step": 4, "default": 32 }
+  ],
+  "blocks": [
+    {
+      "type": "word",
+      "name": "Word",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Timeless" },
+        { "type": "select", "id": "style", "label": "Style", "options": [{ "value": "solid", "label": "Solid" }, { "value": "outline", "label": "Outline" }, { "value": "gradient", "label": "Gradient" }, { "value": "italic", "label": "Italic (Playfair)" }], "default": "solid" }
+      ]
+    },
+    { "type": "photo", "name": "Photo", "settings": [{ "type": "image_picker", "id": "image", "label": "Photo" }] }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Gapsy · Marquee",
+      "blocks": [
+        { "type": "word", "settings": { "text": "Timeless", "style": "solid" } },
+        { "type": "word", "settings": { "text": "quality", "style": "italic" } },
+        { "type": "word", "settings": { "text": "Everyday", "style": "gradient" } },
+        { "type": "word", "settings": { "text": "Statement", "style": "outline" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
