@@ -11,7 +11,11 @@
   "sections": {
     "hero": {
       "type": "gapsy-hero",
-      "settings": {}
+      "settings": {
+        "model_image": "shopify://shop_images/ChatGPT_Image_18_ber._2026_r._19_21_31_1.png",
+        "left_image": "shopify://shop_images/zavantazhennya_1.jpg",
+        "right_image": "shopify://shop_images/image_231.jpg"
+      }
     },
     "about": {
       "type": "gapsy-about",
@@ -25,7 +29,8 @@
             "image_width": 162,
             "image_height": 210,
             "offset": 36,
-            "parallax": 30
+            "parallax": 30,
+            "image": "shopify://shop_images/ChatGPT_Image_17_ber._2026_r._13_19_08_1.jpg"
           }
         },
         "f2": {
@@ -37,7 +42,8 @@
             "image_width": 164,
             "image_height": 246,
             "offset": 0,
-            "parallax": -40
+            "parallax": -40,
+            "image": "shopify://shop_images/ChatGPT_Image_17_ber._2026_r._13_10_59_1.jpg"
           }
         },
         "f3": {
@@ -49,7 +55,8 @@
             "image_width": 140,
             "image_height": 210,
             "offset": 36,
-            "parallax": 50
+            "parallax": 50,
+            "image": "shopify://shop_images/ChatGPT_Image_17_ber._2026_r._13_15_46_1.jpg"
           }
         }
       },
@@ -67,21 +74,24 @@
           "type": "category",
           "settings": {
             "collection_handle": "everyday-bags",
-            "title": "Everyday bags"
+            "title": "Everyday bags",
+            "image": "shopify://shop_images/ChatGPT_Image_16_ber._2026_r._16_17_54_1.png"
           }
         },
         "c2": {
           "type": "category",
           "settings": {
             "collection_handle": "statement-bags",
-            "title": "Statement bags"
+            "title": "Statement bags",
+            "image": "shopify://shop_images/ChatGPT_Image_16_ber._2026_r._16_22_17_1.png"
           }
         },
         "c3": {
           "type": "category",
           "settings": {
             "collection_handle": "mini-bags",
-            "title": "Mini bags"
+            "title": "Mini bags",
+            "image": "shopify://shop_images/ChatGPT_Image_16_ber._2026_r._16_43_23_1.png"
           }
         }
       },
@@ -105,7 +115,8 @@
           "type": "photo",
           "settings": {
             "width": 100,
-            "height": 108
+            "height": 108,
+            "image": "shopify://shop_images/image_235.jpg"
           }
         },
         "w2": {
@@ -118,7 +129,8 @@
           "type": "photo",
           "settings": {
             "width": 100,
-            "height": 108
+            "height": 108,
+            "image": "shopify://shop_images/image_236.jpg"
           }
         },
         "w3": {
@@ -143,7 +155,10 @@
     },
     "trendy": {
       "type": "gapsy-trendy",
-      "settings": {}
+      "settings": {
+        "model_image": "shopify://shop_images/ChatGPT_Image_16_ber._2026_r._22_14_52_1.png",
+        "square_image": "shopify://shop_images/ChatGPT_Image_17_ber._2026_r._14_19_18_1.jpg"
+      }
     },
     "marquee": {
       "type": "gapsy-marquee",

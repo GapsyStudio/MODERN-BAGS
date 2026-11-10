@@ -13,7 +13,9 @@
   "sections": {
     "gapsy_header": {
       "type": "gapsy-header",
-      "settings": {}
+      "settings": {
+        "avatar": "shopify://shop_images/image_232.jpg"
+      }
     }
   },
   "order": [
