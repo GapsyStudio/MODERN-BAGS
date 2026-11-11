@@ -71,10 +71,11 @@
   .gapsy-lookbook__hint span { display: inline-block; animation: gapsy-nudge 1.6s var(--gapsy-ease) infinite; }
   @keyframes gapsy-nudge { 50% { transform: translateX(0.5rem); } }
   .gapsy-lookbook__look { position: relative; flex: none; margin: 0; transform: translateY(var(--lb-y, 0%)); }
-  .gapsy-lookbook__look--s { width: 20rem; }
-  .gapsy-lookbook__look--m { width: 28rem; }
-  .gapsy-lookbook__look--l { width: 36rem; }
-  .gapsy-lookbook__frame { display: block; aspect-ratio: 3 / 4; overflow: hidden; background: var(--gapsy-surface); }
+  /* sized by screen height so every look fits on laptops too */
+  .gapsy-lookbook__frame { display: block; height: var(--lb-h, 56vh); aspect-ratio: 3 / 4; overflow: hidden; background: var(--gapsy-surface); }
+  .gapsy-lookbook__look--s { --lb-h: min(44vh, 30rem); }
+  .gapsy-lookbook__look--m { --lb-h: min(56vh, 38rem); }
+  .gapsy-lookbook__look--l { --lb-h: min(64vh, 44rem); }
   .gapsy-lookbook__look--l .gapsy-lookbook__frame { aspect-ratio: 4 / 5; }
   .gapsy-lookbook__img { display: block; width: 120%; height: 100%; margin-left: -10%; will-change: transform; }
   .gapsy-lookbook__img img, .gapsy-lookbook__img svg { width: 100%; height: 100%; object-fit: cover; transition: transform 1.1s var(--gapsy-ease); }
@@ -99,6 +100,7 @@
     .gapsy-lookbook__intro { width: 78vw; scroll-snap-align: start; }
     .gapsy-lookbook__look { transform: none; scroll-snap-align: start; scroll-margin-left: var(--gapsy-gutter); }
     .gapsy-lookbook__look--s, .gapsy-lookbook__look--m, .gapsy-lookbook__look--l { width: 72vw; }
+    .gapsy-lookbook__frame { height: auto; width: 100%; }
     .gapsy-lookbook__num { font-size: 4rem; }
     .gapsy-lookbook__cap-title, .gapsy-lookbook__cap-price { font-size: 1.375rem; }
     .gapsy-lookbook__text { font-size: 1rem; }
