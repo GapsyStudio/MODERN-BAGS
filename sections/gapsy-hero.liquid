@@ -129,20 +129,25 @@
     .gapsy-hero { height: auto; padding-top: 1.5rem; }
     .gapsy-hero__title { position: relative; left: auto; right: auto; top: auto; display: grid; width: max-content; margin-inline: auto; font-size: 13.4vw; column-gap: 0.5rem; }
     .gapsy-hero__prefix { font-size: 7.5vw; }
-    .gapsy-hero__stage { position: relative; inset: auto; height: 132vw; margin-top: 12vw; }
-    .gapsy-hero__model { left: 0; right: 0; margin-inline: auto; top: -12vw; width: 86vw; height: 144vw; }
-    .gapsy-hero__text--top { left: var(--gapsy-gutter); top: 4vw; width: 46vw; font-size: 4.4vw; }
-    .gapsy-hero__text--bottom { left: var(--gapsy-gutter); top: auto; bottom: 6vw; width: 40vw; font-size: 4.4vw; }
-    .gapsy-hero__photo--left { left: var(--gapsy-gutter); top: 44vw; width: 23vw; height: 28vw; }
-    .gapsy-hero__photo--right { left: auto; right: var(--gapsy-gutter); top: 6vw; width: 26vw; height: 32vw; }
-    .gapsy-hero__badge { left: auto; right: var(--gapsy-gutter); top: auto; bottom: 4vw; --gapsy-badge-size: 26vw; }
+    /* mobile: model on the right, a left column with text → photo → photo → text, nothing over the face */
+    .gapsy-hero__stage { position: relative; inset: auto; height: 128vw; margin-top: 8vw; }
+    /* the photo ends at the waist: pin it to the bottom edge so the cut never shows */
+    .gapsy-hero__model { left: auto; right: -12vw; margin: 0; top: auto; bottom: 0; width: 88vw; height: auto; aspect-ratio: 1476 / 1738; }
+    .gapsy-hero__model-img { object-position: bottom center; }
+    .gapsy-hero__text--top { left: var(--gapsy-gutter); top: 5vw; width: 34vw; font-size: 3.6vw; line-height: 1.25; }
+    .gapsy-hero__text--bottom { left: var(--gapsy-gutter); top: auto; bottom: 5vw; width: 34vw; font-size: 3.6vw; }
+    .gapsy-hero__photo--left { left: var(--gapsy-gutter); top: 30vw; width: 27vw; height: 32vw; }
+    .gapsy-hero__photo--right { left: var(--gapsy-gutter); right: auto; top: 66vw; width: 27vw; height: 32vw; }
+    .gapsy-hero__badge { left: auto; right: var(--gapsy-gutter); top: auto; bottom: 5vw; --gapsy-badge-size: 24vw; }
     .gapsy-hero__loader { top: -8vw; font-size: 0.9375rem; gap: 0.75rem; }
     .gapsy-hero__loader-bar { width: 6rem; }
   }
   @media (min-width: 768px) and (max-width: 991px) {
     .gapsy-hero__title { font-size: 11vw; }
-    .gapsy-hero__stage { height: 96vw; }
-    .gapsy-hero__model { width: 64vw; height: 106vw; top: -10vw; }
+    .gapsy-hero__stage { height: 86vw; }
+    .gapsy-hero__model { width: 62vw; right: 2vw; }
+    .gapsy-hero__photo--left { width: 18vw; height: 22vw; top: 22vw; }
+    .gapsy-hero__photo--right { width: 18vw; height: 22vw; top: 46vw; }
     .gapsy-hero__text--top, .gapsy-hero__text--bottom { font-size: 3.2vw; }
     .gapsy-hero__badge { --gapsy-badge-size: 18vw; }
   }

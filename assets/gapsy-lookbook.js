@@ -41,7 +41,7 @@
           : { trigger: look, containerAnimation: tl, start: 'left 90%', once: true },
       });
     });
-    Gapsy.revealHeading(el.querySelector('[data-reveal-heading]'));
+    Gapsy.revealHeading(el.querySelector('.gapsy-lookbook__intro--desktop [data-reveal-heading]'));
 
     const onResize = () => setH();
     window.addEventListener('resize', onResize);

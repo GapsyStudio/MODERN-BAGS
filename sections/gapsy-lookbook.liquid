@@ -12,9 +12,13 @@
   {% if s.anchor_id != blank %}id="{{ s.anchor_id | handleize }}"{% endif %}
   style="--lb-bg: {{ s.background }}; --lb-text: {{ s.text_color }}; background: {{ s.background }}; color: {{ s.text_color }};"
 >
+  <div class="gapsy-lookbook__intro gapsy-lookbook__intro--mobile gapsy-container">
+    {%- render 'gapsy-heading', text: s.heading, size: s.heading_size, em_size: s.em_size, size_mobile: s.heading_size_mobile -%}
+    {%- if s.text != blank -%}<p class="gapsy-lookbook__text">{{ s.text }}</p>{%- endif -%}
+  </div>
   <div class="gapsy-lookbook__sticky" data-lookbook-sticky>
     <div class="gapsy-lookbook__track" data-lookbook-track>
-      <div class="gapsy-lookbook__intro">
+      <div class="gapsy-lookbook__intro gapsy-lookbook__intro--desktop">
         {%- render 'gapsy-heading', text: s.heading, size: s.heading_size, em_size: s.em_size, size_mobile: s.heading_size_mobile -%}
         {%- if s.text != blank -%}<p class="gapsy-lookbook__text">{{ s.text }}</p>{%- endif -%}
         <p class="gapsy-lookbook__hint" aria-hidden="true">{{ s.hint }} <span>→</span></p>
@@ -66,6 +70,7 @@
   .gapsy-lookbook__sticky { position: sticky; top: 0; height: 100vh; height: 100svh; display: flex; flex-direction: column; justify-content: center; overflow: clip; }
   .gapsy-lookbook__track { display: flex; align-items: center; gap: 5rem; width: max-content; padding-inline: var(--gapsy-gutter) 10vw; will-change: transform; }
   .gapsy-lookbook__intro { flex: none; width: 36rem; }
+  .gapsy-lookbook__intro--mobile { display: none; }
   .gapsy-lookbook__text { max-width: 26rem; margin-top: 1.5rem; font-size: 1.1875rem; line-height: 1.55; opacity: 0.8; }
   .gapsy-lookbook__hint { margin-top: 2.5rem; font-family: var(--gapsy-font-condensed-sc); font-weight: 600; font-size: 1.25rem; letter-spacing: 0.14em; text-transform: uppercase; }
   .gapsy-lookbook__hint span { display: inline-block; animation: gapsy-nudge 1.6s var(--gapsy-ease) infinite; }
@@ -94,17 +99,21 @@
   .gapsy-lookbook.is-static .gapsy-lookbook__look, .gapsy-lookbook.is-static .gapsy-lookbook__intro { scroll-snap-align: start; scroll-margin-left: var(--gapsy-gutter); }
   .gapsy-lookbook.is-static .gapsy-lookbook__progress { display: none; }
   @media (max-width: 991px) {
-    .gapsy-lookbook__sticky { position: relative; height: auto; padding-block: 3rem; overflow: visible; }
-    .gapsy-lookbook__track { overflow-x: auto; width: auto; gap: 1.25rem; padding-top: 2.5rem; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .gapsy-lookbook { padding-top: 3rem; }
+    .gapsy-lookbook__intro--desktop { display: none; }
+    .gapsy-lookbook__intro--mobile { display: block; width: auto; }
+    .gapsy-lookbook__intro--mobile .gapsy-lookbook__text { margin-top: 0.75rem; }
+    .gapsy-lookbook__sticky { position: relative; height: auto; padding-block: 1rem 3rem; overflow: visible; }
+    .gapsy-lookbook__track { overflow-x: auto; width: auto; gap: 1rem; align-items: flex-start; padding-top: 2.5rem; padding-inline: var(--gapsy-gutter); scroll-padding-inline: var(--gapsy-gutter); scroll-snap-type: x mandatory; scrollbar-width: none; }
     .gapsy-lookbook__track::-webkit-scrollbar { display: none; }
     .gapsy-lookbook__intro { width: 78vw; scroll-snap-align: start; }
-    .gapsy-lookbook__look { transform: none; scroll-snap-align: start; scroll-margin-left: var(--gapsy-gutter); }
+    .gapsy-lookbook__look { transform: none; scroll-snap-align: start; }
     .gapsy-lookbook__look--s, .gapsy-lookbook__look--m, .gapsy-lookbook__look--l { width: 72vw; }
     .gapsy-lookbook__frame { height: auto; width: 100%; }
     .gapsy-lookbook__num { font-size: 4rem; }
     .gapsy-lookbook__cap-title, .gapsy-lookbook__cap-price { font-size: 1.375rem; }
     .gapsy-lookbook__text { font-size: 1rem; }
-    .gapsy-lookbook__end { --gapsy-badge-size: 9rem; padding-left: 0; }
+    .gapsy-lookbook__end { --gapsy-badge-size: 9rem; padding-left: 0; align-self: center; padding-right: var(--gapsy-gutter); }
     .gapsy-lookbook__progress { display: none; }
   }
 {% endstylesheet %}
