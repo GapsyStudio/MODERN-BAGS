@@ -1,11 +1,12 @@
 {%- comment -%}
   Responsive image or a neutral placeholder when nothing is picked in the editor.
-  Params: image, sizes (default 50vw), class, loading ('lazy' | 'eager'), alt, placeholder ('image' | 'product-1' …)
+  Params: image, sizes (default 50vw), class, loading ('lazy' | 'eager'), alt, alt_fallback, placeholder ('image' | 'product-1' …)
 {%- endcomment -%}
 {%- liquid
   assign img_sizes = sizes | default: '(min-width: 992px) 50vw, 100vw'
   assign img_loading = loading | default: 'lazy'
-  assign img_alt = alt | default: image.alt | escape
+  # editor alt first; images without one get a neutral description (no empty alt)
+  assign img_alt = alt | default: image.alt | default: alt_fallback | default: 'Model with a Modern Bags handbag' | escape
 -%}
 {%- if image != blank -%}
   {%- if img_loading == 'eager' -%}
