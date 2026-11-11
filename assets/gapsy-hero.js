@@ -83,7 +83,7 @@
     if (desktop && el.dataset.parallax === 'true') {
       const scrub = { trigger: el, start: 'top top', end: 'bottom top', scrub: true };
       triggers.push(gsap.to(title, { yPercent: 35, ease: 'none', scrollTrigger: scrub }));
-      triggers.push(gsap.to(modelInner, { yPercent: -6, ease: 'none', scrollTrigger: { ...scrub } }));
+      // the model stays put: its photo ends at the bottom edge of the hero, moving it would show the cut
       photos.forEach((p) => {
         const speed = parseFloat(p.dataset.speed || 0);
         triggers.push(gsap.to(p, { y: () => -Gapsy.rem(speed / 16) * 3, ease: 'none', scrollTrigger: { ...scrub, invalidateOnRefresh: true } }));
