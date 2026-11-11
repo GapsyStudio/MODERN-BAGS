@@ -1,0 +1,51 @@
+{%- comment -%}
+  Card → product morph (cross-document View Transitions, Chrome/Edge 126+, Safari 18.2+).
+  When a product card is clicked, assets/gapsy-transition.js names the card photo "gapsy-product"
+  and stores a flag; this inline script names the first product photo on the next page, so the
+  browser flies the photo from the card to its place. All other navigations skip the browser
+  transition (the gradient-stripe transition handles those). Older browsers just navigate.
+  Must stay inline in <head>: 'pagereveal' fires before the first paint.
+  On/off: Theme settings → Modern Bags · Motion → "Product photo morph".
+{%- endcomment -%}
+{%- if settings.gapsy_product_morph != false and request.design_mode == false -%}
+  <style>
+    @media (prefers-reduced-motion: no-preference) {
+      @view-transition { navigation: auto; }
+    }
+    ::view-transition-group(gapsy-product) { animation-duration: 0.8s; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); z-index: 2; }
+    ::view-transition-old(gapsy-product), ::view-transition-new(gapsy-product) { height: 100%; width: 100%; object-fit: contain; animation-duration: 0.8s; }
+    ::view-transition-old(root) { animation: 0.45s cubic-bezier(0.65, 0, 0.35, 1) both gapsy-vt-out; }
+    ::view-transition-new(root) { animation: 0.6s 0.15s cubic-bezier(0.65, 0, 0.35, 1) both gapsy-vt-in; }
+    @keyframes gapsy-vt-out { to { opacity: 0; transform: translateY(-2%); } }
+    @keyframes gapsy-vt-in { from { opacity: 0; transform: translateY(3%); } }
+  </style>
+  {%- if template.name == 'product' -%}
+    <link rel="expect" href="#gapsy-vt-target" blocking="render" id="gapsy-vt-blocker">
+    <script>setTimeout(function () { var b = document.getElementById('gapsy-vt-blocker'); if (b) b.remove(); }, 1500);</script>
+  {%- endif -%}
+  <script>
+    (function () {
+      var KEY = 'gapsy-vt';
+      var get = function () { try { return sessionStorage.getItem(KEY); } catch (e) { return null; } };
+      var clear = function () { try { sessionStorage.removeItem(KEY); } catch (e) {} };
+      window.addEventListener('pageswap', function (e) {
+        if (e.viewTransition && !get()) e.viewTransition.skipTransition();
+      });
+      window.addEventListener('pagereveal', function (e) {
+        var vt = e.viewTransition;
+        var flag = get();
+        clear();
+        if (!vt) return;
+        var target = document.querySelector('#gapsy-vt-target img, #gapsy-vt-target svg');
+        if (!flag || !target) { vt.skipTransition(); return; }
+        target.style.viewTransitionName = 'gapsy-product';
+        document.documentElement.classList.add('gapsy-vt-in');
+        document.documentElement.setAttribute('data-vt-arrived', '');
+        vt.finished.finally(function () {
+          target.style.viewTransitionName = '';
+          document.documentElement.classList.remove('gapsy-vt-in');
+        });
+      });
+    })();
+  </script>
+{%- endif -%}

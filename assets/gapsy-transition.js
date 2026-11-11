@@ -29,6 +29,7 @@
 
   // Back/forward cache: never come back to a covered page.
   window.addEventListener('pageshow', (e) => {
+    document.querySelectorAll('.gapsy-card__image').forEach((i) => (i.style.viewTransitionName = ''));
     if (e.persisted) { html.classList.remove('gapsy-pt-in', 'gapsy-pt-out'); gsap.set(stripes, { clearProps: 'clipPath' }); store(false); }
   });
 
@@ -38,6 +39,18 @@
     const a = e.target.closest('a[href]');
     if (!a || a.target === '_blank' || a.hasAttribute('download') || a.dataset.noTransition !== undefined) return;
     if (a.hasAttribute('data-cart-open') && window.Gapsy && Gapsy.cart) return; // opens the bag drawer instead
+    // Product card → product page: let the browser morph the photo (View Transitions) instead of stripes.
+    const card = a.closest('[data-product-card]');
+    const morph = card && 'onpagereveal' in window && document.querySelector('[data-gapsy-pt]') !== null;
+    if (morph && !reduce) {
+      const img = card.querySelector('.gapsy-card__image');
+      if (img) {
+        document.querySelectorAll('.gapsy-card__image').forEach((i) => (i.style.viewTransitionName = ''));
+        img.style.viewTransitionName = 'gapsy-product';
+        try { sessionStorage.setItem('gapsy-vt', '1'); } catch (err) {}
+        return; // normal navigation; the browser does the morph
+      }
+    }
     const url = new URL(a.href, location.href);
     if (url.origin !== location.origin) return;
     if (url.pathname === location.pathname && url.search === location.search) return; // same page / #anchor

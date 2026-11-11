@@ -208,6 +208,69 @@
         "m5"
       ],
       "settings": {}
+    },
+    "lookbook": {
+      "type": "gapsy-lookbook",
+      "blocks": {
+        "look1": {
+          "type": "look",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_18_ber._2026_r._19_21_31_1.png",
+            "size": "l",
+            "offset": 0,
+            "product": "crimson-croc-tote",
+            "caption": "City red"
+          }
+        },
+        "look2": {
+          "type": "look",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_17_ber._2026_r._13_10_59_1.jpg",
+            "size": "s",
+            "offset": -16,
+            "product": "burgundy-bow-bag",
+            "caption": "Evening wine"
+          }
+        },
+        "look3": {
+          "type": "look",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_16_ber._2026_r._22_14_52_1.png",
+            "size": "m",
+            "offset": 12,
+            "product": "ruby-flap-shoulder-bag",
+            "caption": "Sunset walk"
+          }
+        },
+        "look4": {
+          "type": "look",
+          "settings": {
+            "image": "shopify://shop_images/image_231.jpg",
+            "size": "s",
+            "offset": -8,
+            "product": "pink-petal-handbag",
+            "caption": "Weekend edit"
+          }
+        },
+        "look5": {
+          "type": "look",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_16_ber._2026_r._16_17_54_1.png",
+            "size": "m",
+            "offset": 6,
+            "product": "olive-pearl-mini-bag",
+            "caption": "Soft olive"
+          }
+        }
+      },
+      "block_order": [
+        "look1",
+        "look2",
+        "look3",
+        "look4",
+        "look5"
+      ],
+      "settings": {}
     }
   },
   "order": [
@@ -215,6 +278,7 @@
     "about",
     "categories",
     "love",
+    "lookbook",
     "products",
     "marquee",
     "trendy"

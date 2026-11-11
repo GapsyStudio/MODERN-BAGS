@@ -104,6 +104,13 @@
       },
       {
         "type": "checkbox",
+        "id": "gapsy_product_morph",
+        "label": "Product photo morph (card → product page)",
+        "info": "Chrome, Edge, Safari 18.2+. Other browsers navigate normally.",
+        "default": true
+      },
+      {
+        "type": "checkbox",
         "id": "gapsy_page_transition",
         "label": "Page transition (gradient stripes)",
         "default": true
@@ -134,6 +141,12 @@
         "id": "gapsy_cursor_label_category",
         "label": "Cursor label on categories",
         "default": "Shop"
+      },
+      {
+        "type": "checkbox",
+        "id": "gapsy_webgl",
+        "label": "Liquid hover on product photos (WebGL)",
+        "default": true
       }
     ]
   },

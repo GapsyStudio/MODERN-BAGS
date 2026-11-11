@@ -1,0 +1,155 @@
+{%- comment -%}
+  Gapsy · Lookbook — horizontal scroll story. On desktop the section sticks to the screen and, while
+  you scroll down, the line of looks slides left; photos drift inside their frames and the big
+  index number counts. On mobile it is a swipe row with scroll-snap. Reduced motion: swipe row.
+  Data: intro (italic word + title + text), blocks "Look" (photo, size, vertical offset, caption,
+  linked product → title + price + link). JS: assets/gapsy-lookbook.js.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<section
+  class="gapsy-section gapsy-lookbook"
+  data-gapsy-section="lookbook"
+  {% if s.anchor_id != blank %}id="{{ s.anchor_id | handleize }}"{% endif %}
+  style="--lb-bg: {{ s.background }}; --lb-text: {{ s.text_color }}; background: {{ s.background }}; color: {{ s.text_color }};"
+>
+  <div class="gapsy-lookbook__sticky" data-lookbook-sticky>
+    <div class="gapsy-lookbook__track" data-lookbook-track>
+      <div class="gapsy-lookbook__intro">
+        {%- render 'gapsy-heading', text: s.heading, size: s.heading_size, em_size: s.em_size, size_mobile: s.heading_size_mobile -%}
+        {%- if s.text != blank -%}<p class="gapsy-lookbook__text">{{ s.text }}</p>{%- endif -%}
+        <p class="gapsy-lookbook__hint" aria-hidden="true">{{ s.hint }} <span>→</span></p>
+      </div>
+
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign b = block.settings
+          assign p = b.product
+          assign link = b.link | default: p.url
+          assign caption = b.caption | default: p.title
+        -%}
+        <figure class="gapsy-lookbook__look gapsy-lookbook__look--{{ b.size }}" style="--lb-y: {{ b.offset }}%;" data-lookbook-look {{ block.shopify_attributes }}>
+          <span class="gapsy-lookbook__num" aria-hidden="true">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+          {%- if link != blank -%}<a href="{{ link }}" class="gapsy-lookbook__frame" data-cursor="{{ s.cursor_label | escape }}">{%- else -%}<div class="gapsy-lookbook__frame">{%- endif -%}
+            <span class="gapsy-lookbook__img" data-lookbook-img>
+              {%- liquid
+                assign lb_loading = 'lazy'
+                if forloop.index <= 2
+                  assign lb_loading = 'eager'
+                endif
+              -%}
+              {%- render 'gapsy-image', image: b.image, sizes: '(min-width: 992px) 34vw, 78vw', alt: caption, loading: lb_loading -%}
+            </span>
+          {%- if link != blank -%}</a>{%- else -%}</div>{%- endif -%}
+          {%- if caption != blank -%}
+            <figcaption class="gapsy-lookbook__cap">
+              <span class="gapsy-lookbook__cap-title">{{ caption }}</span>
+              {%- if p != blank -%}<span class="gapsy-lookbook__cap-price">{{ p.price | money }}</span>{%- endif -%}
+            </figcaption>
+          {%- endif -%}
+        </figure>
+      {%- endfor -%}
+
+      {%- if s.end_label != blank -%}
+        <div class="gapsy-lookbook__end">
+          <a href="{{ s.end_url | default: routes.all_products_collection_url }}" class="gapsy-badge-link" data-magnetic="0.3">
+            {%- render 'gapsy-badge', text: s.end_label, id: section.id -%}
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+    <div class="gapsy-lookbook__progress" aria-hidden="true"><span data-lookbook-progress></span></div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .gapsy-lookbook { position: relative; }
+  .gapsy-lookbook__sticky { position: sticky; top: 0; height: 100vh; height: 100svh; display: flex; flex-direction: column; justify-content: center; overflow: clip; }
+  .gapsy-lookbook__track { display: flex; align-items: center; gap: 5rem; width: max-content; padding-inline: var(--gapsy-gutter) 10vw; will-change: transform; }
+  .gapsy-lookbook__intro { flex: none; width: 36rem; }
+  .gapsy-lookbook__text { max-width: 26rem; margin-top: 1.5rem; font-size: 1.1875rem; line-height: 1.55; opacity: 0.8; }
+  .gapsy-lookbook__hint { margin-top: 2.5rem; font-family: var(--gapsy-font-condensed-sc); font-weight: 600; font-size: 1.25rem; letter-spacing: 0.14em; text-transform: uppercase; }
+  .gapsy-lookbook__hint span { display: inline-block; animation: gapsy-nudge 1.6s var(--gapsy-ease) infinite; }
+  @keyframes gapsy-nudge { 50% { transform: translateX(0.5rem); } }
+  .gapsy-lookbook__look { position: relative; flex: none; margin: 0; transform: translateY(var(--lb-y, 0%)); }
+  .gapsy-lookbook__look--s { width: 20rem; }
+  .gapsy-lookbook__look--m { width: 28rem; }
+  .gapsy-lookbook__look--l { width: 36rem; }
+  .gapsy-lookbook__frame { display: block; aspect-ratio: 3 / 4; overflow: hidden; background: var(--gapsy-surface); }
+  .gapsy-lookbook__look--l .gapsy-lookbook__frame { aspect-ratio: 4 / 5; }
+  .gapsy-lookbook__img { display: block; width: 120%; height: 100%; margin-left: -10%; will-change: transform; }
+  .gapsy-lookbook__img img, .gapsy-lookbook__img svg { width: 100%; height: 100%; object-fit: cover; transition: transform 1.1s var(--gapsy-ease); }
+  @media (hover: hover) { a.gapsy-lookbook__frame:hover img { transform: scale(1.05); } }
+  .gapsy-lookbook__num { position: absolute; z-index: 1; top: -0.62em; right: -0.15em; font-family: var(--gapsy-font-display); font-size: 6rem; line-height: 1; background: var(--gapsy-text-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; pointer-events: none; }
+  .gapsy-lookbook__cap { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-top: 0.75rem; font-family: var(--gapsy-font-condensed); text-transform: uppercase; }
+  .gapsy-lookbook__cap-title { font-weight: 500; font-size: 1.75rem; line-height: 1.1; }
+  .gapsy-lookbook__cap-price { font-weight: 700; font-size: 1.75rem; }
+  .gapsy-lookbook__end { flex: none; display: flex; align-items: center; padding-left: 2rem; --gapsy-badge-size: 13rem; }
+  .gapsy-lookbook__end .gapsy-badge { color: currentColor; }
+  .gapsy-lookbook__progress { position: absolute; left: var(--gapsy-gutter); right: var(--gapsy-gutter); bottom: 2.5rem; height: 1px; background: currentColor; opacity: 0.2; }
+  .gapsy-lookbook__progress span { position: absolute; inset: 0; background: currentColor; transform: scaleX(0); transform-origin: left; }
+  .gapsy-lookbook.is-static .gapsy-lookbook__sticky { position: relative; height: auto; padding-block: 4rem; overflow: visible; }
+  .gapsy-lookbook.is-static .gapsy-lookbook__track { overflow-x: auto; width: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 1rem; }
+  .gapsy-lookbook.is-static .gapsy-lookbook__track::-webkit-scrollbar { display: none; }
+  .gapsy-lookbook.is-static .gapsy-lookbook__look, .gapsy-lookbook.is-static .gapsy-lookbook__intro { scroll-snap-align: start; scroll-margin-left: var(--gapsy-gutter); }
+  .gapsy-lookbook.is-static .gapsy-lookbook__progress { display: none; }
+  @media (max-width: 991px) {
+    .gapsy-lookbook__sticky { position: relative; height: auto; padding-block: 3rem; overflow: visible; }
+    .gapsy-lookbook__track { overflow-x: auto; width: auto; gap: 1.25rem; padding-top: 2.5rem; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .gapsy-lookbook__track::-webkit-scrollbar { display: none; }
+    .gapsy-lookbook__intro { width: 78vw; scroll-snap-align: start; }
+    .gapsy-lookbook__look { transform: none; scroll-snap-align: start; scroll-margin-left: var(--gapsy-gutter); }
+    .gapsy-lookbook__look--s, .gapsy-lookbook__look--m, .gapsy-lookbook__look--l { width: 72vw; }
+    .gapsy-lookbook__num { font-size: 4rem; }
+    .gapsy-lookbook__cap-title, .gapsy-lookbook__cap-price { font-size: 1.375rem; }
+    .gapsy-lookbook__text { font-size: 1rem; }
+    .gapsy-lookbook__end { --gapsy-badge-size: 9rem; padding-left: 0; }
+    .gapsy-lookbook__progress { display: none; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Gapsy · Lookbook",
+  "tag": "div",
+  "class": "gapsy-section-wrap",
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "<em>the</em> Lookbook" },
+    { "type": "range", "id": "heading_size", "label": "Heading size (px @1440)", "min": 40, "max": 200, "step": 2, "default": 110 },
+    { "type": "range", "id": "em_size", "label": "Italic words size (px @1440)", "min": 20, "max": 140, "step": 2, "default": 64 },
+    { "type": "range", "id": "heading_size_mobile", "label": "Heading size, mobile (px)", "min": 28, "max": 100, "step": 2, "default": 56 },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Six looks, one idea: the bag finishes the outfit. Scroll through the season." },
+    { "type": "text", "id": "hint", "label": "Scroll hint", "default": "Scroll" },
+    { "type": "text", "id": "cursor_label", "label": "Cursor label on photos", "default": "Shop" },
+    { "type": "text", "id": "end_label", "label": "End badge text", "default": "shop the look", "info": "Empty = no badge at the end." },
+    { "type": "url", "id": "end_url", "label": "End badge link" },
+    { "type": "color", "id": "background", "label": "Background", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#000000" },
+    { "type": "text", "id": "anchor_id", "label": "Anchor ID", "default": "lookbook" }
+  ],
+  "blocks": [
+    {
+      "type": "look",
+      "name": "Look",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        { "type": "select", "id": "size", "label": "Size", "options": [{ "value": "s", "label": "Small" }, { "value": "m", "label": "Medium" }, { "value": "l", "label": "Large" }], "default": "m" },
+        { "type": "range", "id": "offset", "label": "Vertical offset (%)", "min": -30, "max": 30, "step": 2, "default": 0 },
+        { "type": "product", "id": "product", "label": "Product in this look", "info": "Adds the title, price and link." },
+        { "type": "text", "id": "caption", "label": "Caption", "info": "Empty = product title." },
+        { "type": "url", "id": "link", "label": "Custom link", "info": "Empty = product page." }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "Gapsy · Lookbook",
+      "blocks": [
+        { "type": "look", "settings": { "size": "l", "offset": 0 } },
+        { "type": "look", "settings": { "size": "s", "offset": -14 } },
+        { "type": "look", "settings": { "size": "m", "offset": 10 } }
+      ]
+    }
+  ]
+}
+{% endschema %}

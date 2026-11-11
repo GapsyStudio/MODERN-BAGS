@@ -27,10 +27,12 @@
     {%- comment -%} Gapsy · Modern Bags: fonts, brand variables, styles and animation scripts {%- endcomment -%}
     <script>
       document.documentElement.classList.add('gapsy-js');
+      document.documentElement.dataset.gapsyWebgl = {% if settings.gapsy_webgl == false %}'false'{% else %}'true'{% endif %};
       try { if (sessionStorage.getItem('gapsy-pt') && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('gapsy-pt-in'); } catch (e) {}
       window.GapsyConfig = { smooth: {% if settings.gapsy_smooth_scroll == false %}false{% else %}true{% endif %}, lerp: {{ settings.gapsy_smooth_lerp | default: 10 | divided_by: 100.0 | json }} };
     </script>
     {%- render 'gapsy-head' -%}
+    {%- render 'gapsy-view-transition' -%}
     <script src="{{ 'gsap.min.js' | asset_url }}" defer></script>
     <script src="{{ 'ScrollTrigger.min.js' | asset_url }}" defer></script>
     <script src="{{ 'lenis.min.js' | asset_url }}" defer></script>
@@ -49,6 +51,8 @@
     <script src="{{ 'gapsy-transition.js' | asset_url }}" defer></script>
     <script src="{{ 'gapsy-cart-drawer.js' | asset_url }}" defer></script>
     <script src="{{ 'gapsy-cursor.js' | asset_url }}" defer></script>
+    <script src="{{ 'gapsy-webgl.js' | asset_url }}" defer></script>
+    <script src="{{ 'gapsy-lookbook.js' | asset_url }}" defer></script>
 
     {% if request.design_mode %}
       {%- render 'theme-editor' -%}

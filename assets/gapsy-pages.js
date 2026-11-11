@@ -181,7 +181,7 @@
       const tl = gsap.timeline({ delay: 0.1 });
       tl.from(chars, { yPercent: 110, duration: 0.9, ease: 'power3.out', stagger: 0.02 })
         .from(el.querySelectorAll('[data-product-fade]'), { y: 24, autoAlpha: 0, duration: 0.8, ease: 'power3.out', stagger: 0.07 }, 0.15)
-        .from(slides.slice(0, desktop ? 2 : 1), { clipPath: 'inset(100% 0% 0% 0%)', duration: 1.2, ease: 'expo.inOut', stagger: 0.12, clearProps: 'clipPath' }, 0);
+        .from(slides.slice(document.documentElement.hasAttribute('data-vt-arrived') ? 1 : 0, desktop ? 2 : 1), { clipPath: 'inset(100% 0% 0% 0%)', duration: 1.2, ease: 'expo.inOut', stagger: 0.12, clearProps: 'clipPath' }, 0);
       slides.slice(desktop ? 2 : 1).forEach((s) => desktop && Gapsy.revealImage(s));
     }
 
