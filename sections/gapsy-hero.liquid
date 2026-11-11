@@ -45,10 +45,10 @@
     </div>
 
     {%- if s.text_top != blank -%}
-      <p class="gapsy-hero__text gapsy-hero__text--top{% if s.intro_animation %} gapsy-pre{% endif %}" data-hero-text>{{ s.text_top }}</p>
+      <p class="gapsy-hero__text gapsy-hero__text--top{% if s.intro_animation %} gapsy-pre{% endif %}" data-hero-text>{{ s.text_top | newline_to_br }}</p>
     {%- endif -%}
     {%- if s.text_bottom != blank -%}
-      <p class="gapsy-hero__text gapsy-hero__text--bottom{% if s.intro_animation %} gapsy-pre{% endif %}" data-hero-text>{{ s.text_bottom }}</p>
+      <p class="gapsy-hero__text gapsy-hero__text--bottom{% if s.intro_animation %} gapsy-pre{% endif %}" data-hero-text>{{ s.text_bottom | newline_to_br }}</p>
     {%- endif -%}
 
     {%- if s.show_left_image -%}
@@ -87,8 +87,8 @@
 {% stylesheet %}
   .gapsy-hero { --hero-stage-top: 26.3125rem; height: 72.9375rem; color: var(--gapsy-black); }
   .gapsy-hero__title {
-    position: absolute; z-index: 3; left: 0; right: 0; top: 4.1875rem; width: max-content; margin-inline: auto;
-    display: inline-grid; grid-template-columns: auto auto; column-gap: 0.9rem; margin-block: 0;
+    position: absolute; z-index: 3; left: 0; right: 0; top: 4.9375rem; width: max-content; margin-inline: auto;
+    display: inline-grid; grid-template-columns: auto auto; column-gap: 1.5rem; margin-block: 0;
     font-family: var(--gapsy-font-display); font-weight: 400; font-size: var(--hero-h); line-height: 0.97;
     letter-spacing: 0.011em; text-transform: uppercase; white-space: nowrap;
   }
@@ -162,7 +162,7 @@
     { "type": "range", "id": "prefix_size", "label": "Italic word size (px @1440)", "min": 30, "max": 140, "step": 2, "default": 82 },
     { "type": "header", "content": "Texts" },
     { "type": "textarea", "id": "text_top", "label": "Text, top left", "default": "Discover bags that complete your look and fit effortlessly into your everyday life" },
-    { "type": "textarea", "id": "text_bottom", "label": "Text, bottom left", "default": "Premium materials that feel right" },
+    { "type": "textarea", "id": "text_bottom", "label": "Text, bottom left", "default": "Premium materials\nthat feel right", "info": "Press Enter for a new line." },
     { "type": "color", "id": "text_color", "label": "Text colour on the background", "default": "#ffffff" },
     { "type": "header", "content": "Images" },
     { "type": "image_picker", "id": "model_image", "label": "Model (PNG cut-out, transparent background)", "info": "About 1480 × 2220 px." },

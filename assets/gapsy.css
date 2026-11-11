@@ -43,6 +43,7 @@ body { background: var(--gapsy-white); }
   font-weight: 400;
   font-size: var(--gapsy-h-size, 6.875rem);
   line-height: 1.5;
+  padding-top: 0.11em; /* matches the Figma text box: Anton sits lower in Figma's "auto" line height */
   letter-spacing: 0.01em;
   text-transform: uppercase;
   color: inherit;
@@ -57,7 +58,7 @@ body { background: var(--gapsy-white); }
 }
 .gapsy-h strong, .gapsy-h b { font-weight: 400; }
 @media (max-width: 991px) {
-  .gapsy-h { font-size: var(--gapsy-h-size-m, 3.5rem); line-height: 1.15; }
+  .gapsy-h { font-size: var(--gapsy-h-size-m, 3.5rem); line-height: 1.15; padding-top: 0; }
   .gapsy-h em, .gapsy-h i { font-size: var(--gapsy-h-em-size-m, 0.582em); }
 }
 
@@ -88,7 +89,7 @@ body { background: var(--gapsy-white); }
 /* ---------- Rotating "choose a bag" badge ---------- */
 .gapsy-badge { position: relative; display: block; width: var(--gapsy-badge-size, 13rem); aspect-ratio: 1; color: var(--gapsy-black); }
 .gapsy-badge__ring { width: 100%; height: 100%; animation: gapsy-spin var(--gapsy-badge-speed, 14s) linear infinite; }
-.gapsy-badge__ring text { font-family: var(--gapsy-font-display); font-size: 20px; letter-spacing: 0.02em; text-transform: uppercase; fill: currentColor; }
+.gapsy-badge__ring text { font-family: var(--gapsy-font-display); font-size: 24px; letter-spacing: 0.01em; text-transform: uppercase; fill: currentColor; }
 .gapsy-badge__icon { position: absolute; inset: 0; margin: auto; width: 24%; height: 24%; transition: transform 0.5s var(--gapsy-ease); }
 @media (hover: hover) { a.gapsy-badge:hover .gapsy-badge__icon { transform: rotate(45deg); } }
 @keyframes gapsy-spin { to { transform: rotate(360deg); } }

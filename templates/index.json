@@ -14,7 +14,8 @@
       "settings": {
         "model_image": "shopify://shop_images/ChatGPT_Image_18_ber._2026_r._19_21_31_1.png",
         "left_image": "shopify://shop_images/zavantazhennya_1.jpg",
-        "right_image": "shopify://shop_images/image_231.jpg"
+        "right_image": "shopify://shop_images/image_231.jpg",
+        "text_bottom": "Premium materials\nthat feel right"
       }
     },
     "about": {
