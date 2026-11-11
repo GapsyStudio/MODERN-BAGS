@@ -30,10 +30,15 @@
         scrollTrigger: { trigger: img.closest('[data-lookbook-look]'), containerAnimation: tl, start: 'left right', end: 'right left', scrub: true },
       });
     });
-    el.querySelectorAll('[data-lookbook-look]').forEach((look) => {
+    el.querySelectorAll('[data-lookbook-look]').forEach((look, i) => {
+      // looks already on screen when the section arrives reveal on the vertical scroll,
+      // the rest when they slide in horizontally
+      const onScreen = look.offsetLeft < window.innerWidth * 0.9;
       gsap.from(look.querySelector('.gapsy-lookbook__frame'), {
-        clipPath: 'inset(0% 0% 0% 100%)', duration: 1.2, ease: 'expo.inOut', clearProps: 'clipPath',
-        scrollTrigger: { trigger: look, containerAnimation: tl, start: 'left 90%', once: true },
+        clipPath: 'inset(0% 0% 0% 100%)', duration: 1.2, ease: 'expo.inOut', clearProps: 'clipPath', delay: onScreen ? i * 0.12 : 0,
+        scrollTrigger: onScreen
+          ? { trigger: el, start: 'top 70%', once: true }
+          : { trigger: look, containerAnimation: tl, start: 'left 90%', once: true },
       });
     });
     Gapsy.revealHeading(el.querySelector('[data-reveal-heading]'));
