@@ -109,7 +109,8 @@
     .gapsy-lookbook__intro { width: 78vw; scroll-snap-align: start; }
     .gapsy-lookbook__look { transform: none; scroll-snap-align: start; }
     .gapsy-lookbook__look--s, .gapsy-lookbook__look--m, .gapsy-lookbook__look--l { width: 72vw; }
-    .gapsy-lookbook__frame { height: auto; width: 100%; }
+    /* phones: every look the same size, captions on one line */
+    .gapsy-lookbook__frame, .gapsy-lookbook__look--l .gapsy-lookbook__frame { height: auto; width: 100%; aspect-ratio: 3 / 4; }
     .gapsy-lookbook__num { font-size: 4rem; }
     .gapsy-lookbook__cap-title, .gapsy-lookbook__cap-price { font-size: 1.375rem; }
     .gapsy-lookbook__text { font-size: 1rem; }
