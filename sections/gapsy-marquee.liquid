@@ -17,7 +17,7 @@
   {%- endfor -%}
 {%- endcapture -%}
 <section
-  class="gapsy-section gapsy-marquee"
+  class="gapsy-section gapsy-marquee{% if s.hide_mobile %} gapsy-marquee--hide-m{% endif %}"
   data-gapsy-section="marquee"
   data-speed="{{ s.speed }}"
   data-direction="{{ s.direction }}"
@@ -47,6 +47,7 @@
   .gapsy-marquee__sep { font-family: var(--gapsy-font-display); font-size: calc(var(--mq-size) * 0.45); line-height: 1; color: var(--gapsy-primary); }
   .gapsy-marquee__photo { display: block; width: calc(var(--mq-size) * 1.1); height: calc(var(--mq-size) * 0.9); margin-inline: 1.5rem; overflow: hidden; border-radius: 999px; background: var(--gapsy-surface); }
   .gapsy-marquee__photo img, .gapsy-marquee__photo svg { width: 100%; height: 100%; object-fit: cover; }
+  @media (max-width: 767px) { .gapsy-marquee--hide-m { display: none; } }
   @media (max-width: 991px) {
     .gapsy-marquee { --mq-size: var(--mq-size-m); }
     .gapsy-marquee__word { padding-inline: 0.75rem; }
@@ -68,6 +69,7 @@
     { "type": "select", "id": "direction", "label": "Direction", "options": [{ "value": "left", "label": "Left" }, { "value": "right", "label": "Right" }], "default": "left" },
     { "type": "checkbox", "id": "react_to_scroll", "label": "Speed up with scroll, turn on scroll up", "default": true },
     { "type": "range", "id": "tilt", "label": "Tilt (degrees)", "min": -6, "max": 6, "step": 1, "default": 0 },
+    { "type": "checkbox", "id": "hide_mobile", "label": "Hide on phones", "default": true },
     { "type": "checkbox", "id": "border", "label": "Lines above and below", "default": false },
     { "type": "color", "id": "background", "label": "Background", "default": "#ffffff" },
     { "type": "color", "id": "text_color", "label": "Text", "default": "#000000" },

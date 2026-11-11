@@ -2,7 +2,7 @@
 /* Gapsy · Trendy bags — words rise, gradient square grows to the corner on scroll. Markup: sections/gapsy-trendy.liquid */
 (() => {
   if (!window.Gapsy) return;
-  Gapsy.register('trendy', (el, { reduce }) => {
+  Gapsy.register('trendy', (el, { reduce, desktop }) => {
     if (reduce) return;
     const stage = el.querySelector('[data-trendy-stage]');
     const clips = el.querySelectorAll('[data-trendy-clip]');
@@ -17,7 +17,7 @@
     tl.from(el.querySelectorAll('[data-trendy-note]'), { autoAlpha: 0, y: 20, duration: 0.8, stagger: 0.1 }, 0.4);
 
     // Square grows from its own rect to the top-left corner.
-    if (el.dataset.grow === 'true') {
+    if (el.dataset.grow === 'true' && desktop) {
       const cs = getComputedStyle(el);
       gsap.fromTo(clips,
         { clipPath: cs.getPropertyValue('--clip').trim() || 'inset(17.49% 26.74% 6.88% 26.74%)' },

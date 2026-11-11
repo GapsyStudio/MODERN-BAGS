@@ -64,14 +64,16 @@
   .gapsy-trendy__note--2 { left: 43.06em; top: 16.96em; text-align: center; width: 8.35em; }
   .gapsy-trendy__note--3 { left: 1.54em; top: 28.54em; width: 8.1em; }
   @media (max-width: 991px) {
-    /* Mobile composition, drawn on a 40em-wide canvas (1em = 2.5vw). */
-    .gapsy-trendy { font-size: calc(100vw / 40); --clip: inset(20% 10% 8% 15%); --clip-to: inset(6% 10% 8% 4%); }
-    .gapsy-trendy__stage { height: 50em; }
-    .gapsy-trendy__model { left: 9em; top: 4em; width: 25em; height: 42em; }
-    .gapsy-trendy__title { left: 0.136em; top: 0.11em; font-size: 8.8em; }
-    .gapsy-trendy__word { left: 2.65em; top: 5.55em; font-size: 6.5em; line-height: 1; }
-    .gapsy-trendy__notes { position: static; height: auto; display: grid; gap: 1rem; padding: 2rem var(--gapsy-gutter) 2.5rem; font-size: 1rem; }
-    .gapsy-trendy__note, .gapsy-trendy__note--1, .gapsy-trendy__note--2, .gapsy-trendy__note--3 { position: static; width: auto; max-width: 15rem; font-size: 1.375rem; text-align: left; }
+    /* Mobile: the same idea as desktop on a 40em canvas (1em = 2.5vw): square on the right,
+       TRENDY BAGS crosses its top-left edge, STYLE crosses its bottom edge. No grow on scroll. */
+    .gapsy-trendy { font-size: calc(100vw / 40); --clip: inset(15.4% 5% 7.7% 25%); --clip-to: var(--clip); }
+    .gapsy-trendy__stage { height: 52em; }
+    .gapsy-trendy__model { left: 11em; top: 3em; width: 26em; height: 45em; }
+    .gapsy-trendy__title { left: 0.125em; top: 0.6em; font-size: 8em; }
+    .gapsy-trendy__line-mask--2 { padding-left: 1.2em; }
+    .gapsy-trendy__word { left: 3.4em; top: 6.75em; font-size: 6.5em; line-height: 1; }
+    .gapsy-trendy__notes { position: static; height: auto; display: grid; gap: 1.25rem; padding: 1.5rem var(--gapsy-gutter) 3rem; font-size: 1rem; }
+    .gapsy-trendy__note, .gapsy-trendy__note--1, .gapsy-trendy__note--2, .gapsy-trendy__note--3 { position: static; width: auto; max-width: 16rem; font-size: 1.25rem; text-align: left; }
     .gapsy-trendy__note--2 { justify-self: end; text-align: right; }
   }
 {% endstylesheet %}

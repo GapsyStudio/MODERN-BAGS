@@ -7,7 +7,7 @@
 (() => {
   if (!window.Gapsy) return;
   Gapsy.register('marquee', (el, { reduce }) => {
-    if (reduce) return;
+    if (reduce || el.offsetParent === null) return; // hidden on phones
     const track = el.querySelector('[data-marquee-track]');
     const group = el.querySelector('[data-marquee-group]');
     const base = parseFloat(el.dataset.speed || 60); // px per second @1440
