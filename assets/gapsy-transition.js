@@ -37,6 +37,7 @@
     if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     const a = e.target.closest('a[href]');
     if (!a || a.target === '_blank' || a.hasAttribute('download') || a.dataset.noTransition !== undefined) return;
+    if (a.hasAttribute('data-cart-open') && window.Gapsy && Gapsy.cart) return; // opens the bag drawer instead
     const url = new URL(a.href, location.href);
     if (url.origin !== location.origin) return;
     if (url.pathname === location.pathname && url.search === location.search) return; // same page / #anchor

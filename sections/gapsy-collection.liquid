@@ -19,7 +19,13 @@
   style="--gapsy-pt: {{ s.padding_top | divided_by: 16.0 }}rem; --gapsy-pb: {{ s.padding_bottom | divided_by: 16.0 }}rem; --card-h: {{ s.card_height | divided_by: 16.0 }}rem; --card-bg: {{ s.card_background }};"
 >
   <div class="gapsy-container">
-    {%- capture heading -%}{% if s.heading_prefix != blank %}<em>{{ s.heading_prefix }}</em> {% endif %}{{ collection.title }}{%- endcapture -%}
+    {%- liquid
+      assign coll_title = collection.title
+      if collection.handle == 'all' or collection.handle == blank
+        assign coll_title = s.all_label
+      endif
+    -%}
+    {%- capture heading -%}{% if s.heading_prefix != blank %}<em>{{ s.heading_prefix }}</em> {% endif %}{{ coll_title }}{%- endcapture -%}
     {%- render 'gapsy-heading', text: heading, size: s.heading_size, em_size: s.em_size, size_mobile: s.heading_size_mobile, tag: 'h1' -%}
 
     {%- if s.show_description and collection.description != blank -%}

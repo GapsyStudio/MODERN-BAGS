@@ -93,5 +93,4 @@
   .gapsy-section.gapsy-collection .gapsy-card__title, .gapsy-collection .gapsy-card__price { font-size: 1.25rem; }
   .gapsy-collection .gapsy-card__info { flex-direction: column; gap: 0.125rem; }
   .gapsy-collection .gapsy-card__cart { width: 2.75rem; height: 2.75rem; }
-  .gapsy-collection .gapsy-card__swatch { width: 1.75rem; height: 1.75rem; padding: 0.2rem; }
 }

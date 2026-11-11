@@ -64,8 +64,14 @@
       if (!slide) return;
       slides.forEach((s) => s.classList.toggle('is-current', s === slide));
       if (desktop) {
-        const top = slide.getBoundingClientRect().top - (Gapsy.scroller === window ? 0 : Gapsy.scroller.getBoundingClientRect().top);
-        if (Math.abs(top) > 40) Gapsy.lenis ? Gapsy.lenis.scrollTo(slide, { offset: -Gapsy.rem(2) }) : slide.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Keep the visitor where they are: the chosen colour's photo moves to the top of the gallery.
+        if (track && track.firstElementChild !== slide) {
+          gsap.to(track.firstElementChild, { autoAlpha: 0, duration: 0.2, onComplete: () => {
+            track.prepend(slide);
+            gsap.set(track.children, { autoAlpha: 1 });
+            gsap.fromTo(slide, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4 });
+          } });
+        }
       } else if (track) {
         track.scrollTo({ left: slide.offsetLeft, behavior: reduce ? 'auto' : 'smooth' });
       }
@@ -125,6 +131,18 @@
         addBtn.classList.remove('is-loading');
       }
     });
+
+    // desktop: the info column sticks; if it is taller than the screen it sticks by its bottom edge
+    const sticky = el.querySelector('.gapsy-product__sticky');
+    const fitSticky = () => {
+      if (!sticky) return;
+      if (!desktop) { sticky.style.top = ''; return; }
+      const gap = Gapsy.rem(2);
+      sticky.style.top = `${Math.min(gap, window.innerHeight - sticky.offsetHeight - gap)}px`;
+    };
+    fitSticky();
+    on(window, 'resize', fitSticky);
+    el.querySelectorAll('.gapsy-acc').forEach((d) => on(d, 'toggle', fitSticky));
 
     // desktop: hover zoom that follows the cursor
     if (desktop && matchMedia('(hover: hover)').matches) {
